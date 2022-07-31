@@ -21,11 +21,30 @@ The information shall be derived with the support of the following available dat
 - [Sentinel 1](https://registry.opendata.aws/sentinel-1/)
 - [Sentinel 2 COGs](https://registry.opendata.aws/sentinel-2-l2a-cogs/)
 
+Additional datasets:
+- [Openstreetmap](https://openstreetmap.org)
+
 The following methods shall be evaluated regarding their application in the project:
 - machine learning / deep learning based classification
 - classic remote sensing analysis & statistial methods
 - change detection
 - development of a processing chain and a web app
+
+### Time period
+Data shall be analyzed since 2017 until 2022. As the city of Freising is located on the northern hemisphere in the moderate climate zone the start of june should fine for detecting vegetation.
+
+### Products
+#### **Zonal statistics at GADM Level 3**
+Aggregated statistical results shall be dervied at GADM Level 3 (communities) for each year. 
+
+#### **Zonal statistics at real city boundary**
+If applicable a more fine grained city boundary shall be created from the data. This finer boundary may be more valueable for insights because GADM Level 3 may contain the city itself with rural areas.
+
+#### **Pixel level maps for each year**
+Furthermore various maps at pixel level analysis shall be compiled that show the urban green area development for each year.
+
+#### **Change detection pixel level maps**
+Furthermore various maps at pixel level analysis shall be compiled that show the urban green area development for each year.
 
 ## Next Steps
 - [x] create project logo (first draft)
@@ -63,11 +82,29 @@ Die Informationen sollen mit Hilfe der folgenden verfügbaren Datensätze von AS
 - [Sentinel 1](https://registry.opendata.aws/sentinel-1/)
 - [Sentinel 2 COGs](https://registry.opendata.aws/sentinel-2-l2a-cogs/)
 
+Zusätzliche Daten:
+- [Openstreetmap](https://openstreetmap.org)
+
 Die folgenden Methoden sind auf ihre Verwendung zu bewerten:
 - maschinelles Lernen / Deep Learning basierte Klassifizierung
 - klassische Fernerkundungsanalyse und statistische Methoden
 - Veränderungsanalyse
 - Entwicklung einer Verarbeitungskette und einer Web-App
+### Zeitraum
+Die Daten sollen von 2017 bis 2022 ausgewertet werden. Da die Stadt Freising auf der nördlichen Hemisphäre in der gemäßigten Klimazone liegt, sollte der Beginn des Monats Juni für die Erfassung der Vegetation geeignet sein.
+
+### Produkte.
+#### **Zonale Statistik auf GADM Level 3**
+Aggregierte statistische Ergebnisse werden auf GADM Level 3 (Gemeinden) für jedes Jahr abgeleitet. 
+
+#### **Zonale Statistik an der realen Stadtgrenze**
+Gegebenenfalls ist eine feinere Stadtgrenze aus den Daten zu erstellen. Diese feinere Grenze kann für Erkenntnisse wertvoller sein, da die GADM-Ebene 3 die Stadt selbst mit ländlichen Gebieten enthalten kann.
+
+#### **Karten auf Pixelebene für jedes Jahr**
+Außerdem sollen verschiedene Karten auf Pixelebene erstellt werden, die die Entwicklung der städtischen Grünflächen für jedes Jahr zeigen.
+
+#### **Karten zur Erkennung von Veränderungen auf Pixelebene**
+Darüber hinaus sollen verschiedene Karten auf Pixelebene erstellt werden, die die Entwicklung der städtischen Grünflächen für jedes Jahr darstellen.
 
 ## Schritte
 - [x] Projektlogo erstellen (erster Entwurf)
