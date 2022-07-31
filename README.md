@@ -7,7 +7,7 @@ The idea is to support the UN Sustainable Development Goal Nr. 11 [Sustainable C
 
 <br clear="left" />
 
-<img align="right" width=200 style="float: left;" src="https://github.com/sommergis/asdi-urban-green-areas/blob/main/Urban_green_areas_logo.png" />
+<img align="right" width=200 style="float: left;" src="doc/Urban_green_areas_logo.png" />
 
 ## Project scope
 The goal is to collect and analyze data on urban green spaces and visualize it in an appealing way with interactive maps and graphics so that the resulting information is easy to understand.
@@ -28,13 +28,17 @@ The following methods shall be evaluated regarding their application in the proj
 - development of a processing chain and a web app
 
 ## Next Steps
-- create project logo
-- checkout available resources on AWS
-- evaluate data & methods
-- formulate technical road map
-- implementation phase
-- presentation (web page)
-
+- [x] create project logo (first draft)
+- [x] create video (first draft)
+- [ ] checkout available resources on AWS
+  - [x] SageMaker Labs account
+  - [x] extra credits on AWS
+- [ ] evaluate data & methods
+- [ ] formulate technical road map
+- [ ] implementation phase
+- [ ] presentation (web page)
+  - [ ] create final project logo 
+  - [ ] create final video
 <hr />
 
 # Entwicklung städtischer Grünflächen
@@ -46,7 +50,7 @@ Die Idee ist, das UN-Nachhaltigkeitsziel Nr. 11 [Nachhaltige Städte und Gemeind
 
 <br clear="left" />
 
-<img align="right" width=200 style="float: left;" src="https://github.com/sommergis/asdi-urban-green-areas/blob/main/Urban_green_areas_logo.png" />
+<img align="right" width=200 style="float: left;" src="doc/Urban_green_areas_logo.png" />
 
 ## Projektumfang
 Ziel ist es, Daten über städtische Grünflächen zu sammeln, zu analysieren und mit interaktiven Karten und Grafiken ansprechend zu visualisieren und damit die daraus resultierenden Informationen leicht verständlich aufzubereiten. Die Methoden und Ergebnisse dieses Projekts sollen auf andere Städte übertragbar sein. Dies wird durch einen hohen Automatisierungsgrad der Datenverarbeitung und die Nutzung global verfügbarer Datensätze gewährleistet.
@@ -66,9 +70,12 @@ Die folgenden Methoden sind auf ihre Verwendung zu bewerten:
 - Entwicklung einer Verarbeitungskette und einer Web-App
 
 ## Schritte
-- Projektlogo erstellen
-- Verfügbare Ressourcen auf AWS auschecken
-- Daten und Methoden auswerten
-- Technische Roadmap formulieren
-- Umsetzung
-- Präsentation (Webseite)
+- [x] Projektlogo erstellen (erster Entwurf)
+- [x] Video erstellen (erster Entwurf)
+- [ ] Verfügbare Ressourcen auf AWS auschecken
+- [ ] Daten und Methoden auswerten
+- [ ] Technische Roadmap formulieren
+- [ ] Umsetzung
+- [ ] Präsentation (Webseite)
+  - [ ] Projektlogo final erstellen
+  - [ ] Video final erstellen
