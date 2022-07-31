@@ -17,18 +17,19 @@ The information shall be derived with the support of the following available dat
 - [Sentinel 1](https://registry.opendata.aws/sentinel-1/)
 - [Sentinel 2 COGs](https://registry.opendata.aws/sentinel-2-l2a-cogs/)
 
-The following methods shall be evaluated:
+The following methods shall be evaluated regarding their application in the project:
 - machine learning / deep learning based classification
 - classic remote sensing analysis & statistial methods
 - change detection
 - development of a processing chain and a web app
 
-## Steps
+## Next Steps
 - create project logo
 - checkout available resources on AWS
 - evaluate data & methods
 - formulate technical road map
-
+- implementation phase
+- presentation (web page)
 
 <hr />
 
@@ -60,3 +61,5 @@ Die folgenden Methoden sind auf ihre Verwendung zu bewerten:
 - Verfügbare Ressourcen auf AWS auschecken
 - Daten und Methoden auswerten
 - Technische Roadmap formulieren
+- Umsetzung
+- Präsentation (Webseite)
