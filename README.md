@@ -38,7 +38,7 @@ Dieses Repository ist ein Beitrag zum Amazon Sustainability Data Initiative (ASD
 <img align="left" style="float: left;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Sustainable_Development_Goal_11.png/200px-Sustainable_Development_Goal_11.png" />
 
 
-Die Idee ist, das UN-Nachhaltigkeitsziel Nr. 11 [Nachhaltige Städte und Gemeinden](https://en.wikipedia.org/wiki/Sustainable_Development_Goal_11) zu unterstützen, indem die Entwicklung von städtischen Grünflächen am Beispiel von [Freising]((https://www.openstreetmap.org/search?query=Freising#map=12/48.3899/11.7165), einer Kleinstadt in der Nähe von München, analysiert wird.
+Die Idee ist, das UN-Nachhaltigkeitsziel Nr. 11 [Nachhaltige Städte und Gemeinden](https://en.wikipedia.org/wiki/Sustainable_Development_Goal_11) zu unterstützen, indem die Entwicklung von städtischen Grünflächen am Beispiel von [Freising](https://www.openstreetmap.org/search?query=Freising#map=12/48.3899/11.7165), einer Kleinstadt in der Nähe von München, analysiert wird.
 
 ## Projektumfang
 Ziel ist es, Daten über städtische Grünflächen zu sammeln, zu analysieren und mit interaktiven Karten und Grafiken ansprechend zu visualisieren und damit die daraus resultierenden Informationen leicht verständlich aufzubereiten. Die Methoden und Ergebnisse dieses Projekts sollen auf andere Städte übertragbar sein. Dies wird durch einen hohen Automatisierungsgrad der Datenverarbeitung und die Nutzung global verfügbarer Datensätze gewährleistet.
