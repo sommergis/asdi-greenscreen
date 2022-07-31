@@ -14,6 +14,9 @@ The goal is to collect and analyze data on urban green spaces and visualize it i
 The methods and outcomes of this project shall be transferable to other cities. This is ensured by a high level of automation of the data processing and the usage of global avaliable datasets.
 <br clear="right" />
 
+## Video
+[![VIDEO](https://i9.ytimg.com/vi/3fyjXcNsIdY/mq1.jpg?sqp=CKDRm5cG&rs=AOn4CLDnKWh696Jxj68AYXnPDtksplz9Mg)](https://youtu.be/3fyjXcNsIdY)
+
 ## Data & Methods 
 The information shall be derived with the support of the following available datasets of ASDI:
 - [GADM - Global Administrative Boundaries](https://gadm.org/data.html)
@@ -74,6 +77,9 @@ Die Idee ist, das UN-Nachhaltigkeitsziel Nr. 11 [Nachhaltige Städte und Gemeind
 ## Projektumfang
 Ziel ist es, Daten über städtische Grünflächen zu sammeln, zu analysieren und mit interaktiven Karten und Grafiken ansprechend zu visualisieren und damit die daraus resultierenden Informationen leicht verständlich aufzubereiten. Die Methoden und Ergebnisse dieses Projekts sollen auf andere Städte übertragbar sein. Dies wird durch einen hohen Automatisierungsgrad der Datenverarbeitung und die Nutzung global verfügbarer Datensätze gewährleistet.
 <br clear="right" />
+
+## Video
+[![VIDEO](https://i9.ytimg.com/vi/3fyjXcNsIdY/mq1.jpg?sqp=CKDRm5cG&rs=AOn4CLDnKWh696Jxj68AYXnPDtksplz9Mg)](https://youtu.be/3fyjXcNsIdY)
 
 ## Daten und Methoden
 Die Informationen sollen mit Hilfe der folgenden verfügbaren Datensätze von ASDI abgeleitet werden:
