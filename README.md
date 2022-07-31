@@ -1,6 +1,10 @@
 # Urban green areas development
-<img align="left" style="float: left;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Sustainable_Development_Goal_11.png/200px-Sustainable_Development_Goal_11.png" /> 
-This repository is a contribution to the [Amazon Sustainability Data Initiative (ASDI) Global Hackathon 2022](https://aws-asdi.devpost.com/?ref_feature=challenge&ref_medium=discover). The idea is to support the UN Sustainable Development Goal Nr. 11 [Sustainable Cities and Communities](https://en.wikipedia.org/wiki/Sustainable_Development_Goal_11) by analyzing the development of urban green areas by the example of [Freising](https://www.freising.de/) a small city near Munich, Germany. 
+<img align="left" style="float: left;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Sustainable_Development_Goal_11.png/200px-Sustainable_Development_Goal_11.png" />
+
+This repository is a contribution to the [Amazon Sustainability Data Initiative (ASDI) Global Hackathon 2022](https://aws-asdi.devpost.com/?ref_feature=challenge&ref_medium=discover). 
+
+The idea is to support the UN Sustainable Development Goal Nr. 11 [Sustainable Cities and Communities](https://en.wikipedia.org/wiki/Sustainable_Development_Goal_11) by analyzing the development of urban green areas by the example of [Freising](https://www.openstreetmap.org/search?query=Freising#map=12/48.3899/11.7165) a small city near Munich, Germany. 
+
 <br clear="left">
 
 ## Project scope
