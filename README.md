@@ -19,12 +19,12 @@ The methods and outcomes of this project shall be transferable to other cities. 
 
 ## Data & Methods 
 The information shall be derived with the support of the following available datasets of ASDI:
-- [GADM - Global Administrative Boundaries](https://gadm.org/data.html)
 - [ESA Worldcover 2020](https://registry.opendata.aws/esa-worldcover/)
 - [Sentinel 1](https://registry.opendata.aws/sentinel-1/)
 - [Sentinel 2 COGs](https://registry.opendata.aws/sentinel-2-l2a-cogs/)
 
 Additional datasets:
+- [GADM - Global Administrative Boundaries](https://gadm.org/data.html)
 - [Openstreetmap](https://openstreetmap.org)
 
 The following methods shall be evaluated regarding their application in the project:
@@ -83,12 +83,12 @@ Ziel ist es, Daten über städtische Grünflächen zu sammeln, zu analysieren un
 
 ## Daten und Methoden
 Die Informationen sollen mit Hilfe der folgenden verfügbaren Datensätze von ASDI abgeleitet werden:
-- [GADM - Global Administrative Boundaries](https://gadm.org/data.html)
 - [ESA Worldcover 2020](https://registry.opendata.aws/esa-worldcover/)
 - [Sentinel 1](https://registry.opendata.aws/sentinel-1/)
 - [Sentinel 2 COGs](https://registry.opendata.aws/sentinel-2-l2a-cogs/)
 
 Zusätzliche Daten:
+- [GADM - Global Administrative Boundaries](https://gadm.org/data.html)
 - [Openstreetmap](https://openstreetmap.org)
 
 Die folgenden Methoden sind auf ihre Verwendung zu bewerten:
