@@ -1,4 +1,4 @@
-# Urban green areas development
+# GREENSCREEN - urban green areas development
 <img align="left" style="float: left;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Sustainable_Development_Goal_11.png/200px-Sustainable_Development_Goal_11.png" />
 
 This repository is a contribution to the [Amazon Sustainability Data Initiative (ASDI) Global Hackathon 2022](https://aws-asdi.devpost.com/?ref_feature=challenge&ref_medium=discover).
@@ -7,7 +7,7 @@ The idea is to support the UN Sustainable Development Goal Nr. 11 [Sustainable C
 
 <br clear="left" />
 
-<img align="right" width=200 style="float: left;" src="doc/Urban_green_areas_logo.png" />
+<img align="right" width=200 style="float: left;" src="doc/logo.png" />
 
 ## Project scope
 The goal is to collect and analyze data on urban green spaces and visualize it in an appealing way with interactive maps and graphics so that the resulting information is easy to understand.
@@ -63,7 +63,7 @@ Furthermore various maps at pixel level analysis shall be compiled that show the
   - [ ] create final video
 <hr />
 
-# Entwicklung städtischer Grünflächen
+# GREENSCREEN - Entwicklung städtischer Grünflächen
 <img align="left" style="float: left;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Sustainable_Development_Goal_11.png/200px-Sustainable_Development_Goal_11.png" />
 
 Dieses Repository ist ein Beitrag zum Amazon Sustainability Data Initiative (ASDI) Global Hackathon 2022.
@@ -72,7 +72,7 @@ Die Idee ist, das UN-Nachhaltigkeitsziel Nr. 11 [Nachhaltige Städte und Gemeind
 
 <br clear="left" />
 
-<img align="right" width=200 style="float: left;" src="doc/Urban_green_areas_logo.png" />
+<img align="right" width=200 style="float: left;" src="doc/logo.png" />
 
 ## Projektumfang
 Ziel ist es, Daten über städtische Grünflächen zu sammeln, zu analysieren und mit interaktiven Karten und Grafiken ansprechend zu visualisieren und damit die daraus resultierenden Informationen leicht verständlich aufzubereiten. Die Methoden und Ergebnisse dieses Projekts sollen auf andere Städte übertragbar sein. Dies wird durch einen hohen Automatisierungsgrad der Datenverarbeitung und die Nutzung global verfügbarer Datensätze gewährleistet.
