@@ -48,30 +48,32 @@ def reproject_geom(geojson, src_epsg="EPSG:4326", dst_epsg="EPSG:3857"):
         dst_epsg,
         [feature["geometry"] for feature in geojson["features"]]
     )
-    return shapes_reprojected
+    return shapes_reprojected[0]
 
 def save_geojson(geojson_dict, file_path):
-    """ Saves geojson to given file path"""
+    """ Saves geojson to given file path and reprojects it to EPSG 3857"""
     
     with open(file_path, "w") as f:
         f.write(json.dumps(geojson_dict))
 
-    # TODO proper feature collection with reprojected GeoJSON
+    feature_col = geojson_dict
+    shapes_reprojected = reproject_geom(geojson=feature_col, src_epsg="EPSG:4326", dst_epsg="EPSG:3857")
 
-    # feature_col = resp.json()
-    # shapes_reprojected = reproject_geom(geojson=feature_col,src_epsg="EPSG:4326",dst_epsg="EPSG:3857")
-    # feature_col["features"] = shapes_reprojected
-    #
-    # # write geojson limited to city boundary
-    # with open(file_name, 'w') as f:
-    #     f.write(json.dumps(feature_col))
+    # its only 1 feature
+    feature_col["features"][0]["geometry"] = shapes_reprojected
+    # add spatial reference system info (GeoJSON has natively WGS84 projection!)
+    feature_col["crs"] = {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::3857"}}
+
+    # write geojson limited to city boundary
+    with open(file_path, 'w') as f:
+        f.write(json.dumps(feature_col))
 
 
 if __name__ == "__main__":
 
     # set any city name
     city_name = "Freising"
-    # city_name = "Atlanta"
+    city_name = "Agadir"
 
     # geocode city name, get city boundary geojson file
     try:
