@@ -1,0 +1,10 @@
+httpx
+cloudpathlib
+xarray
+rioxarray
+fiona
+scipy
+scikit-learn
+scikit-image
+joblib
+iso3166
