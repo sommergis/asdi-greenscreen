@@ -1,0 +1,93 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# last update: 2022-08-05
+# authors: jsommer
+
+""" 
+    00_get_city_boundary.py 
+    
+    Downloads the boundary for the given city from OpenStreetMap to EPSG 3857 projection GeoJSON file.
+
+"""
+
+import httpx
+from httpx import HTTPStatusError
+
+import json
+import rasterio as rio
+import rasterio.warp
+
+def geocode_city(city_name):
+    """ Geocoding of city name to city boundary """
+
+    # search city with Geocoding service https://nominatim.org/
+    # language: english with &accept-language=en
+    # country available with &addressdetails=1
+    #url = f"https://nominatim.openstreetmap.org/search?city={city_name}&format=jsonv2&accept-language=en&addressdetails=1&limit=1"
+
+    # &polygon_geojson=1 -> city boundary
+    url = f"https://nominatim.openstreetmap.org/search?city={city_name}&format=geojson&accept-language=en&limit=1&polygon_geojson=1"
+
+    # query service
+    resp = httpx.get(url)
+    if resp.status_code == 200:
+        geojson = resp.json()
+
+        return geojson
+
+    # raise exceptions for any status != 200
+    resp.raise_for_status()
+
+
+def reproject_geom(geojson, src_epsg="EPSG:4326", dst_epsg="EPSG:3857"):
+    """ """
+    # reprojection
+    shapes_reprojected = rio.warp.transform_geom(
+        src_epsg,
+        dst_epsg,
+        [feature["geometry"] for feature in geojson["features"]]
+    )
+    return shapes_reprojected
+
+def save_geojson(geojson_dict, file_path):
+    """ Saves geojson to given file path"""
+    
+    with open(file_path, "w") as f:
+        f.write(json.dumps(geojson_dict))
+
+    # TODO proper feature collection with reprojected GeoJSON
+
+    # feature_col = resp.json()
+    # shapes_reprojected = reproject_geom(geojson=feature_col,src_epsg="EPSG:4326",dst_epsg="EPSG:3857")
+    # feature_col["features"] = shapes_reprojected
+    #
+    # # write geojson limited to city boundary
+    # with open(file_name, 'w') as f:
+    #     f.write(json.dumps(feature_col))
+
+
+if __name__ == "__main__":
+
+    # set any city name
+    city_name = "Freising"
+    # city_name = "Atlanta"
+
+    # geocode city name, get city boundary geojson file
+    try:
+        geojson_dict = geocode_city(city_name=city_name)
+        
+        file_path = f"../data/osm_nominatim_{city_name}.geojson"
+        
+        save_geojson(geojson_dict=geojson_dict, file_path=file_path)
+
+    except HTTPStatusError as ex:
+        print(ex)
+    
+    except Exception as ex:
+        print(ex)
+    
+
+    
+
+
