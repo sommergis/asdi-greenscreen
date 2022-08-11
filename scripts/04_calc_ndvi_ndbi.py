@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# last update: <YYYY-MM-DD>
-# authors: <author>
+# last update: 2022-08-11
+# authors: jsommer
 
 """ 
     04_calc_ndvi_ndbi.py 
