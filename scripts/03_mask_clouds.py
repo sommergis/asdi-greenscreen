@@ -57,9 +57,10 @@ if __name__ == '__main__':
 
     clouds = compute_cloudmask(scl_array=scl)
     
+    # get the rasterio profile only
     with rio.open("../../data/S2A_32UPU_20220617_0_L2A/SCL.tif", "r") as src:
         profile = src.profile
 
-    # for testing only - write band to file system
-    with rio.open(f"../data/clouds_test.tif", "w", **profile) as dest:
-        dest.write(clouds)
+        # for testing only - write band to file system
+        with rio.open(f"../../data/S2A_32UPU_20220617_0_L2A/clouds_test.tif", "w", **profile) as dest:
+            dest.write(clouds)
