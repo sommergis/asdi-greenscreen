@@ -20,73 +20,7 @@ import rasterio.io
 import os.path
 from rasterio.warp import Resampling, aligned_target
 
-
-def read_s2_band(file_path, debug=False):
-    """ Reads one band of a Sentinel-2 scene and returns a numpy array. 
-    
-        Note that a band coarser than 10m spatial resolution will be resampled to 10m.
-    """
-
-    # read band
-    with rio.open(file_path) as src:
-        
-        profile = src.profile
-
-        transform = profile.get("transform")
-        resolution_x = transform[0]
-
-        # resample in case of coarser spatial resolution than 10m
-        if resolution_x > 10:           
-            scale_factor = resolution_x/10
-
-            print(f"Resolution of {file_path} is coarser than 10m - resampling during reading band with factor {scale_factor}..")
-
-            # resample band during read
-            band = src.read(
-                out_shape=(
-                    src.count,
-                    int(src.height * scale_factor),
-                    int(src.width * scale_factor)
-                ),
-                resampling=Resampling.cubic
-            )
-            # scale image transform
-            transform = src.transform * src.transform.scale(
-                (src.width / band.shape[-1]),
-                (src.height / band.shape[-2])
-            )
-            profile.update({
-                'count': 1,
-                'driver': 'Gtiff',
-                'height': src.height * scale_factor,
-                'width': src.width * scale_factor,
-                'transform': transform
-                }
-            )
-
-        else:
-            band = src.read(
-                out_shape=(
-                    src.count,
-                    int(src.height),
-                    int(src.width)
-                )
-            )
-            profile.update({
-                'count': 1,
-                'driver': 'Gtiff',
-                'height': src.height,
-                'width': src.width,
-                'transform': src.transform
-                }
-            )
-
-    if debug == True:
-        # for testing only - write band to file system
-        with rio.open(f"../data/{os.path.splitext(file_path)[0]}_test.tif", "w", **profile) as dest:
-            dest.write(band)
-
-    return band
+from utils import read_s2_band
 
 
 def scale_values(in_single_np_array, factor=10000):
@@ -159,4 +93,4 @@ if __name__ == '__main__':
 
     ndbi = calc_ndbi(swir_array=b11, nir_array=b08)
 
-    assert ndvi.shape == ndbi.shape
+    assert ndvi.shape == ndbi.shape, f"shapes of ndvi and ndbi differ: {ndvi.shape}, {ndbi.shape}"
