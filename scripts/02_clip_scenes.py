@@ -5,9 +5,9 @@
 # authors: <author>
 
 """ 
-    <template>.py 
+    02_clip_scenes.py 
     
-    <Description what this script does>
+    Clip all satellite scenes to the given city boundary (GeoJSON).
 
 """
 

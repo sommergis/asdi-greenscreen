@@ -5,9 +5,9 @@
 # authors: <author>
 
 """ 
-    <template>.py 
+    06_zonal_stats.py 
     
-    <Description what this script does>
+    Calculate statistics for vegetation or built up area pixels.
 
 """
 
