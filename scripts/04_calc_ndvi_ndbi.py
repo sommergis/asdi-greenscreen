@@ -21,10 +21,10 @@ import os.path
 from rasterio.warp import Resampling, aligned_target
 
 
-def read_s2_band(file_path):
-    """ Reads one band of a Sentinel-2 scene and returns a multi dimensional numpy array. 
+def read_s2_band(file_path, debug=False):
+    """ Reads one band of a Sentinel-2 scene and returns a numpy array. 
     
-        Note that a bands coarser than 10m spatial resolution will be resampled to 10m.
+        Note that a band coarser than 10m spatial resolution will be resampled to 10m.
     """
 
     # read band
@@ -81,8 +81,10 @@ def read_s2_band(file_path):
                 }
             )
 
-    with rio.open(f"../data/{os.path.splitext(file_path)[0]}_test.tif", "w", **profile) as dest:
-        dest.write(band)
+    if debug == True:
+        # for testing only - write band to file system
+        with rio.open(f"../data/{os.path.splitext(file_path)[0]}_test.tif", "w", **profile) as dest:
+            dest.write(band)
 
     return band
 
@@ -143,7 +145,8 @@ def calc_ndbi(swir_array, nir_array):
 
 if __name__ == '__main__':
 
-    # duration without window read: 7,7s
+    # duration without writing test data to disk: 7,7s
+    # duration with writing test data to disk: 46,2s
 
     # read test data
     b04 = read_s2_band(file_path="../../data/S2A_32UPU_20220617_0_L2A/B04.tif")
