@@ -20,7 +20,7 @@ import rasterio.io
 import os.path
 from rasterio.warp import Resampling, aligned_target
 
-from utils import read_s2_band
+from utils import read_s2_band, read_s2_band_windowed
 
 
 def scale_values(in_single_np_array, factor=10000):
@@ -79,13 +79,13 @@ def calc_ndbi(swir_array, nir_array):
 
 if __name__ == '__main__':
 
-    # duration without writing test data to disk: 7,7s
-    # duration with writing test data to disk: 46,2s
+    # duration without writing test data to disk: 0,8s
 
     # read test data
-    b04 = read_s2_band(file_path="../../data/S2A_32UPU_20220617_0_L2A/B04.tif")
-    b08 = read_s2_band(file_path="../../data/S2A_32UPU_20220617_0_L2A/B08.tif")
-    b11 = read_s2_band(file_path="../../data/S2A_32UPU_20220617_0_L2A/B11.tif")
+    geojson_file_path = "../data/osm_nominatim_Freising.geojson"
+    b04 = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B04.tif", geojson_file_path=geojson_file_path)
+    b08 = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B08.tif", geojson_file_path=geojson_file_path)
+    b11 = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B11.tif", geojson_file_path=geojson_file_path)
 
     assert b04.shape == b08.shape == b11.shape, f"shapes of bands differ: {b04.shape}, {b08.shape}, {b11.shape}"
     
