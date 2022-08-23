@@ -19,7 +19,7 @@ import rasterio.mask
 import rasterio.io
 import os.path
 
-from utils import read_s2_band
+from utils import read_s2_band_windowed
 
 def compute_cloudmask(scl_array, debug=False):
     ''' Converts the given Sentinel-2 L2A SCL Band to a cloud mask (0 nodata, 1 cloud, 2 no cloud) 
@@ -29,7 +29,7 @@ def compute_cloudmask(scl_array, debug=False):
     '''
 
     # pixels are classified in SCL dataset
-    # 0,1,3,8,9,10: cloud or invalid pixels
+    # 0,1,3,8,9,10,11: cloud or invalid pixels
     cloud_pixel_classes = { 0: True, 1: True, 2: False, 3: True, 4: False, 5: False, 6: False, 7: False, 
                             8: True, 9: True, 10: True, 11: True
                             }
@@ -50,17 +50,27 @@ def compute_cloudmask(scl_array, debug=False):
     return reclass_array
 
 
+def mask_cloud_pixels(s2_array, cloud_array):
+    """ Masks out cloud pixels in given s2_array. Note that the given arrays have to fit regarding shape and dimensions """
+
+    return np.where(cloud_array == 1, s2_array, np.nan)
+
+
 if __name__ == '__main__':
 
     # read test data
-    scl = read_s2_band(file_path="../../data/S2A_32UPU_20220617_0_L2A/SCL.tif", debug=True)
+    geojson_file_path = "../data/osm_nominatim_Freising.geojson"
+
+    scl, scl_profile = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/SCL.tif", geojson_file_path=geojson_file_path)
+    b04, b04_profile = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B04.tif", geojson_file_path=geojson_file_path)
 
     clouds = compute_cloudmask(scl_array=scl)
-    
-    # get the rasterio profile only
-    with rio.open("../../data/S2A_32UPU_20220617_0_L2A/SCL.tif", "r") as src:
-        profile = src.profile
 
-        # for testing only - write band to file system
-        with rio.open(f"../../data/S2A_32UPU_20220617_0_L2A/clouds_test.tif", "w", **profile) as dest:
-            dest.write(clouds)
+    s2_array_masked = mask_cloud_pixels(s2_array=b04, cloud_array=clouds)
+    
+    # for testing only - write band to file system
+    with rio.open(f"../../data/S2A_32UPU_20220617_0_L2A/clouds.tif", "w", **scl_profile) as dest:
+        dest.write(clouds)
+
+    with rio.open(f"../../data/S2A_32UPU_20220617_0_L2A/B04_masked.tif", "w", **b04_profile) as dest:
+        dest.write(s2_array_masked)

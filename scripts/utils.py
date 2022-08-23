@@ -19,7 +19,8 @@ import rasterio.mask
 import rasterio.io
 import os.path
 from rasterio.warp import Resampling, aligned_target
-
+import datetime as dt
+from get_satellite_scenes import get_scenes
 
 def read_s2_band_windowed(s2_file_path, geojson_file_path, debug=False):
     """ Reads one band of a Sentinel-2 scene using the bounding box of the given GeoJSON geometry (windowed read) and 
@@ -182,7 +183,7 @@ def read_s2_band_windowed(s2_file_path, geojson_file_path, debug=False):
         with rio.open(f"../data/{os.path.splitext(s2_file_path)[0]}_windowed", "w", **profile) as dest:
             dest.write(band)
 
-    return band
+    return band, profile
 
 
 def read_s2_band(s2_file_path, debug=False):
@@ -278,9 +279,63 @@ if __name__ == '__main__':
 
     # read test data
     geojson_file_path = "../data/osm_nominatim_Freising.geojson"
-    b04 = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B04.tif", geojson_file_path=geojson_file_path, debug=False)
-    b08 = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B08.tif", geojson_file_path=geojson_file_path, debug=False)
-    b11 = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B11.tif", geojson_file_path=geojson_file_path, debug=False)
+    # b04 = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B04.tif", geojson_file_path=geojson_file_path, debug=False)
+    # b08 = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B08.tif", geojson_file_path=geojson_file_path, debug=False)
+    # b11 = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B11.tif", geojson_file_path=geojson_file_path, debug=False)
 
-    assert b04.shape == b08.shape == b11.shape, f"shapes of bands differ: {b04.shape}, {b08.shape}, {b11.shape}"
+    # assert b04.shape == b08.shape == b11.shape, f"shapes of bands differ: {b04.shape}, {b08.shape}, {b11.shape}"
 
+
+    # test against AWS S3 bucket
+
+    with open(geojson_file_path,"r") as fp:
+        file_content = json.load(fp)
+
+    geometry = file_content["features"][0]["geometry"]
+
+    # get scenes per year
+
+    #years = [x for x in range(2017,dt.datetime.today().year+1)]
+    years = [x for x in range(2022,dt.datetime.today().year+1)]
+
+    scenes_per_year = {}
+
+    for year in years:
+
+        enddate = min(f"{dt.datetime.today().date()}", f"{year}-12-31")
+
+        scenes = get_scenes(
+            startdate=f"{year}-01-01", 
+            enddate=f"{enddate}", 
+            geojson=geometry, 
+            max_cloudcover=20
+        )
+
+        scenes_per_year[year] = scenes
+
+    # from pprint import pprint
+    # pprint(scenes_per_year)
+
+    scenes_2022 = scenes_per_year.get(2022)
+
+    # B10 is missing for L2A
+    s2_l2a_bands = ["B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08", "B8A", "B09", "B11", "B12"]
+
+    all_scenes = {}
+
+    # create median stack for 2022
+    for scene in scenes_2022[:1]:
+        
+        # dict for all bands per scene
+        scene_bands = {}
+        for band_id in s2_l2a_bands:
+            url = scene.assets.get(band_id).get("href")
+
+            band, profile = read_s2_band_windowed(s2_file_path=url, geojson_file_path=geojson_file_path)
+            
+            scene_bands[band_id] = dict(array=band, profile=profile)
+
+        all_scenes[scene] = scene_bands
+
+    # from pprint import pprint
+    # pprint(all_scenes)

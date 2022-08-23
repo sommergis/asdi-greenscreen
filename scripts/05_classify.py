@@ -7,7 +7,7 @@
 """ 
     05_classify.py 
     
-    Classify all pixels of the given NDVI and NDBI rasters to either vegetation or built-up area.
+    Classify all pixels of the given rasters to either vegetation or built-up area.
 
 """
 
@@ -17,11 +17,14 @@ import numpy as np
 import rasterio as rio
 from rasterio.plot import reshape_as_image, reshape_as_raster
 
+import sys
+sys.path.append(os.path.join(os.getcwd(), ".."))
+
 from utils import read_s2_band_windowed
 from calc_ndvi_ndbi import calc_ndbi, calc_ndvi, calc_ndwi, calc_ndmi, calc_ndre1
 
-from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans, MiniBatchKMeans, SpectralClustering, AgglomerativeClustering
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.cluster import KMeans, MiniBatchKMeans, SpectralClustering, AgglomerativeClustering, DBSCAN
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
@@ -65,12 +68,17 @@ def reclass_array(ndvi_array, ndbi_array):
 def cluster_arrays(*args):
     """ Creates a stack of the given arrays and clusters them to vegetation and built up area pixels """
     
-    # create a stack of arrays
-    array_list = []
-    for array in args:
-        array_list.append(array.squeeze())
-    
-    stack = np.dstack(array_list)
+    if len(args) > 0:
+        array_list = []
+        # create a stack of arrays
+        for array in args:
+            array_list.append(array.squeeze())
+
+        # Dimos tip
+        stack = np.stack(array_list, axis=2)
+
+    else:
+        stack = args[0]
 
     print(stack.shape)
 
@@ -85,9 +93,10 @@ def cluster_arrays(*args):
 
     # instantiate classifier & fit
     #k_means = KMeans(n_clusters=2, random_state=0).fit(ndvi_array_reshaped)
-    k_means = MiniBatchKMeans(n_clusters=6).fit(stack_reshaped)
+    #k_means = MiniBatchKMeans(n_clusters=6).fit(stack_reshaped)
+    clf = DBSCAN().fit(stack_reshaped)
 
-    cluster = k_means.labels_
+    cluster = clf.labels_
 
     # reshape again
     #labels = cluster.reshape(ndvi_array.shape)    
@@ -142,9 +151,9 @@ def train(*args, esa_landcover):
             band_intensity = np.mean(X[y==class_type, :], axis=0)
             ax.plot(band_count, band_intensity, label=class_type)
 
-        ax.set_title('Band Intensities Full Overview')
+        ax.set_title('Band Full Overview')
         ax.set_xlabel('Band #')
-        ax.set_ylabel('Reflectance Value')
+        ax.set_ylabel('Value')
         ax.legend(loc="upper right")
 
         plt.show()
@@ -192,9 +201,6 @@ def train(*args, esa_landcover):
     # rasterio numpy axis order
     # bands, rows, columns = stack.shape
     
-    #from rasterio.plot import reshape_as_image
-
-    #stack = reshape_as_image(stack)
     rows, columns, bands = stack.shape
 
     stack_bands = bands
@@ -227,7 +233,7 @@ def train(*args, esa_landcover):
     # 50: bua
     # 99: other
 
-    # keep everything from 10-50, otherwise mark as 99
+    # keep everything from 10-50, otherwise mark as 0
     esa_landcover = np.where(
         (esa_landcover <= 60), 
         esa_landcover,
@@ -243,10 +249,10 @@ def train(*args, esa_landcover):
     # cropland: 2
     esa_landcover = np.where(
         (esa_landcover == 40), 
-        2,
+        1,
         esa_landcover
     )
-    # bua & bare soil: 2
+    # bua: 3 & # bare soil
     esa_landcover = np.where(
         (esa_landcover == 50), 
         3,
@@ -257,10 +263,13 @@ def train(*args, esa_landcover):
         3,
         esa_landcover
     )
-    # print(f"veg (10-40): {(esa_landcover<=1).sum()}")
-    # print(f"bua (50) & bare soil (60): {(esa_landcover==2).sum()}")
-    # print(f"other (99): {(esa_landcover==99).sum()}")
-
+    
+    # 99 to 0
+    esa_landcover = np.where(
+        (esa_landcover == 99), 
+        0,
+        esa_landcover
+    )
     # check for normalization
     #stack_reshaped = StandardScaler().fit_transform(stack_reshaped)
 
@@ -271,10 +280,7 @@ def train(*args, esa_landcover):
 
     # & validation; 25% of the training set is validation; => 20% of total is validation
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.25, random_state=0)
-
-    #score = 0
-    #while score < 0.70:
-        
+       
     # tree decision vars
     n_estimators = randint(5,50)
 
@@ -282,20 +288,22 @@ def train(*args, esa_landcover):
     # n_neighbors = randint(2, 10)
     # print(f"n_neighbors: {n_neighbors}")
 
-    ## instantiate classifier & fit
-    vars = dict(
-        n_estimators = n_estimators,
-        n_jobs = 8
-    )
-    clf = RandomForestClassifier(**vars).fit(X_train, y_train)
-
+    # # instantiate classifier & fit
     # vars = dict(
-    #     max_iter = 200,
-    #     hidden_layer_sizes = (50,10,5,5,3),
-    #     early_stopping = True,
-    #     activation = "relu"
+    #     n_estimators = n_estimators,
+    #     n_jobs = 8,
+    #     random_state = 0
     # )
-    # clf = MLPClassifier(**vars).fit(X_train, y_train)
+    # clf = RandomForestClassifier(**vars).fit(X_train, y_train)
+
+    vars = dict(
+        max_iter = 200,
+        hidden_layer_sizes = (10,10,10,),
+        early_stopping = True,
+        activation = "relu",
+        random_state=0
+    )
+    clf = MLPClassifier(**vars).fit(X_train, y_train)
 
     # vars = dict(
     #     probability=True, 
@@ -382,7 +390,8 @@ def train(*args, esa_landcover):
     # save model 
     today = dt.datetime.today()
 
-    model_path = f"esa_landcover_model_{clf_name}_{today}_score_{score}_allclasses.joblib"
+    nb_classes = len(np.unique(esa_landcover))
+    model_path = f"esa_landcover_model_{clf_name}_{today}_score_{score}_{nb_classes}classes.joblib"
     dump(clf, model_path)
 
     with open(f"{os.path.splitext(model_path)[0]}.txt", "w") as meta:
@@ -454,10 +463,8 @@ def predict(*args, model_path=""):
 def create_median_stack(year, city):
     """ Creates a median stack for the given year """
 
-    import numba
-
-    def median(all_scenes_stack):
-        
+    def nanmedian(all_scenes_stack):
+        """ Efficient median computation with cython """
         import bottleneck as bn
 
         return bn.nanmedian(
@@ -465,26 +472,12 @@ def create_median_stack(year, city):
           axis=3
         ).astype("uint16")
     
-    def npmedian(all_scenes_stack):
-        
+    def nanmedian_np(all_scenes_stack):
+        """ Regular median computation with numpy """
         return np.nanmedian(
           np.where(all_scenes_stack < 1, np.nan, all_scenes_stack).astype("float32"), 
           axis=3
         ).astype("uint16")
-
-    @numba.njit
-    def numba_median(all_scenes_stack):
-        
-        # reshaping
-        #(12, 1320, 1133, 4)
-        bands, rows, cols, time = all_scenes_stack.shape
-        all_scenes_stack = np.reshape(all_scenes_stack, (rows * cols, bands, time))
-
-        print(all_scenes_stack.shape)
-
-        return np.nanmedian(
-          np.where(all_scenes_stack < 1, np.nan, all_scenes_stack)
-        )
 
     dates = [
         f"{year}-01-01_{year}-03-31", 
@@ -510,7 +503,7 @@ def create_median_stack(year, city):
     all_scenes_stack = np.stack(all_scenes, axis=3)
 
     print(all_scenes_stack.shape)
-    all_scenes_median = median(all_scenes_stack)
+    all_scenes_median = nanmedian(all_scenes_stack)
     
     #.reshape((bands, rows, cols, time))
     # all_scenes_median_1 = median(all_scenes_stack) 
@@ -540,16 +533,34 @@ def create_median_stack(year, city):
 
 
 if __name__ == '__main__':
-    
-    training = True
+
+    training = False
 
     city = "Freising"
-    geojson_file_path = f"../data/osm_nominatim_{city}.geojson"
-    composite_date = "2020"
-    input_dataset = f"../../data/composites/all_scenes_median_{city}_{composite_date}.tif"
-    
-    # create_median_stack(year=composite_date, city=city)
+    geojson_file_path = f"../../data/osm_nominatim_{city}.geojson"
+    composite_date = "2021"
+    input_dataset = f"../../../data/composites/all_scenes_median_{city}_{composite_date}_osm_nominatim_{city}_clipped.tif"
+    year = composite_date
 
+    #model_path = "./esa_landcover_model_MLPClassifier_2022-08-21 13:50:47.956793_score_88_4classes.joblib"
+    #model_path = "./esa_landcover_model_MLPClassifier_2022-08-21 13:59:26.745505_score_96_3classes.joblib"
+    #model_path = "./esa_landcover_model_RandomForestClassifier_2022-08-21 14:32:09.999005_score_91_4classes.joblib"
+    #model_path = "./esa_landcover_model_RandomForestClassifier_2022-08-21 14:30:43.437518_score_96_3classes.joblib"
+    #model_path = "./esa_landcover_model_RandomForestClassifier_2022-08-21 21:39:56.428012_score_96_3classes.joblib"
+    #model_path = "./esa_landcover_model_RandomForestClassifier_2022-08-21 21:57:40.078347_score_96_3classes.joblib"
+    #model_path = "./esa_landcover_model_RandomForestClassifier_2022-08-21 22:26:17.055292_score_95_3classes.joblib"
+    
+    # more pixely
+    #model_path = "./esa_landcover_model_RandomForestClassifier_2022-08-21 22:32:53.245841_score_96_3classes.joblib"
+    
+    # more compact bua
+    #model_path = "./esa_landcover_model_MLPClassifier_2022-08-21 22:41:43.372977_score_96_3classes.joblib"
+    #model_path = "./esa_landcover_model_MLPClassifier_2022-08-22 21:15:38.150452_score_97_3classes.joblib"
+    
+    # now with 0,2,3 as classes
+    model_path = "./esa_landcover_model_MLPClassifier_2022-08-23 11:44:18.611769_score_97_3classes.joblib"
+
+    # create_median_stack(year=year, city=city)
     # import sys
     # sys.exit()
 
@@ -573,7 +584,11 @@ if __name__ == '__main__':
     b11 = allbands[10, :, :]
     b12 = allbands[11, :, :]
 
-    esa_landcover, profile = read_s2_band_windowed(s2_file_path="../data/ESA_WorldCover_10m_2020_v100_Map_AWS_UTM32N.vrt/ESA_WorldCover_10m_2020_v100_Map_AWS_UTM32N.vrt.0.tif", geojson_file_path=geojson_file_path)
+    #esa_landcover, profile = read_s2_band_windowed(s2_file_path="../../data/ESA_WorldCover_10m_2020_v100_Map_AWS_UTM32N.vrt/ESA_WorldCover_10m_2020_v100_Map_AWS_UTM32N.vrt.0.tif", geojson_file_path=geojson_file_path)
+
+    with rio.open(f"../../data/ESA_WorldCover_10m_2020_v100_Map_AWS_UTM32N_osm_nominatim_{city}_clipped.tif", "r") as src:
+        esa_landcover = src.read()
+        profile = src.profile
 
     # assert b01.shape == b02.shape == b03.shape == b04.shape == b05.shape \
     #     == b06.shape == b07.shape == b08.shape == b8A.shape == b09.shape \
@@ -587,6 +602,8 @@ if __name__ == '__main__':
     ndwi = calc_ndwi(green_array=b03, nir_array=b08)
     ndmi = calc_ndmi(swir_array=b11, nir_array=b08)
     ndre1 = calc_ndre1(rededge_array_1=b05, rededge_array_2=b06)
+
+
 
     # swap axis for image format
     allbands = reshape_as_image(allbands)
@@ -608,10 +625,13 @@ if __name__ == '__main__':
     # good with homogeneity, glcm_mean, entropy
     #glcm_input = (((b04 - b04.min()) / (b04.max() - b04.min()) )*255).astype('uint8')
 
-    glcm_input = (((b02 - b02.min()) / (b02.max() - b02.min()) )*255).astype('uint8')
+    #glcm_input = (((b02 - b02.min()) / (b02.max() - b02.min()) )*255).astype('uint8')
     #glcm_input = (ndwi*255).astype('uint8')
     #glcm_input = (ndbi*255).astype('uint8')
 
+
+    glcm_input = (ndvi*255).astype('uint8')
+    
     homogeneity = fast_glcm_homogeneity(glcm_input)
     contrast = fast_glcm_contrast(glcm_input)
     glcm_mean = fast_glcm_mean(glcm_input)
@@ -641,8 +661,20 @@ if __name__ == '__main__':
     # stack all features together
     #allbands = np.dstack([b01, b02, b03, b04, b05, b11, b12, ndvi, ndwi, entropy])
     #allbands = np.dstack([b01, b02, b03, b04, b05, b06, b07, b08, b8A, b09, b11, b12, ndvi, ndwi, entropy])
-    allbands = np.dstack([allbands, ndvi, ndwi, ndmi, ndbi, ndre1, entropy])
-    #allbands = np.dstack([b03, b04, b11, b8A, entropy])
+    #allbands = np.dstack([b01, b02, b03, b04, b05, b06, b07, b08, b8A, b09, b11, b12, ndvi, ndwi, ndmi, ndbi, ndre1, homogeneity, contrast, entropy])
+    #allbands = np.dstack([allbands, ndvi, ndwi, ndmi, ndbi, ndre1, homogeneity, contrast, entropy])
+
+    #allbands = np.dstack([ndvi, ndwi, ndmi, ndbi, ndre1, homogeneity, contrast, entropy])
+    
+    # best model between years
+    #allbands = np.dstack([ndvi, ndwi, ndmi, homogeneity, entropy])
+
+    # seems also good!
+    #allbands = np.dstack([ndvi, ndwi, homogeneity, entropy])
+    allbands = np.dstack([ndvi, ndwi, ndre1, homogeneity, entropy])
+
+    # GLCM features are important - without them the model is not performing well!
+    #allbands = np.dstack([ndvi, ndwi, ndre1])
 
     # write out training data
     profile.update({
@@ -654,7 +686,7 @@ if __name__ == '__main__':
     allbands_img = reshape_as_raster(allbands)
 
     # for testing only - write band to file system
-    with rio.open(f"../../data/training/{composite_date}.tif", "w", **profile) as dest:
+    with rio.open(f"../../../data/training/{composite_date}.tif", "w", **profile) as dest:
         dest.write(allbands_img)
 
     print(allbands.shape)
@@ -684,10 +716,8 @@ if __name__ == '__main__':
     elif training == False:
         
         classified, classified_probas = predict(
-            allbands,
-            #model_path="./esa_landcover_model_RandomForestClassifier_2022-08-19 23:33:23.851480_score_96_allclasses.joblib"
-            #model_path="./esa_landcover_model_MLPClassifier_2022-08-20 19:20:02.287633_score_96_allclasses.joblib"   
-            model_path="./esa_landcover_model_RandomForestClassifier_2022-08-20 23:31:01.609137_score_91_allclasses.joblib"
+            allbands, 
+            model_path=model_path
         )
 
         profile.update({
@@ -696,8 +726,29 @@ if __name__ == '__main__':
             "nodata": 255
         })
 
+        #
+        # stats
+        #
+        print(f"\nStats classified {composite_date}:\n")
+        print(f"Vegetation & Cropland area ha: {(np.nansum((classified == 1))*100/10000) + (np.nansum((classified == 2))*100/10000)}")
+        # print(f"Cropland area ha: {np.nansum((classified == 2))*100/10000}")
+        print(f"Built up area ha: {np.nansum((classified == 3))*100/10000}")
+        print(f"Other area ha: {np.nansum((classified == 0))*100/10000}")
+        print(f"Total area ha: {classified.size*100/10000}")
+
+        # esa landcover
+        print("\nStats landcover 2020:\n")
+        print(f"Vegetation & Cropland area ha: {(np.nansum((esa_landcover <= 40))*100/10000)}")
+        print(f"Built up area ha: {(np.nansum((esa_landcover == 50))+np.nansum((esa_landcover == 60)))*100/10000}")
+        print(f"Other area ha: {np.nansum((esa_landcover >= 70))*100/10000}")
+        print(f"Total area ha: {esa_landcover.size*100/10000}")
+
+        # # city cluster test
+        # cluster = cluster_arrays(classified.astype("uint8"))
+        # print(cluster.shape)
+
         # for testing only - write band to file system
-        with rio.open(f"../../data/classified/{composite_date}.tif", "w", **profile) as dest:
+        with rio.open(f"../../../data/classified/{composite_date}.tif", "w", **profile) as dest:
             dest.write(classified)
 
         profile.update({
@@ -709,5 +760,5 @@ if __name__ == '__main__':
         for cl in classified_probas.keys():
             class_array = classified_probas.get(cl)
             
-            with rio.open(f"../../data/classified/{composite_date}_{cl}_proba.tif", "w", **profile) as dest:
+            with rio.open(f"../../../data/classified/{composite_date}_{cl}_proba.tif", "w", **profile) as dest:
                 dest.write(class_array, 1)
