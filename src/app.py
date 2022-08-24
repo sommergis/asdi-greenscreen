@@ -12,6 +12,7 @@ from rasterio.features import dataset_features
 import numpy as np
 from pyproj import Transformer 
 import os
+import time
 
 @st.cache
 def read_geojson(path):
@@ -43,12 +44,21 @@ if __name__ == "__main__":
         st.title("GreenScreen")
         st.subheader("Mapping and monitoring urban green areas.")
 
-    
-    year = st.sidebar.slider(
-        "Year selection",
-        min_value=min(years), max_value=max(years), value=2017, step=1
-    )
+    state = st.session_state
 
+    state.year = 2017
+
+    # TODO: does not work with slider
+    #st.sidebar.button("Play", on_click=increment_year())
+ 
+    state.year = st.sidebar.slider(
+        "Year selection",
+        min_value=min(years), 
+        max_value=max(years),
+        value=state.year,
+        step=1
+    )
+    
     # tabs
     tab1, tab2 = st.tabs(["Urban area mapping", "Changes"])
     
@@ -84,11 +94,11 @@ if __name__ == "__main__":
 
             col1, col2, col3 = st.columns([0.2, 0.2, 0.6], gap="small")
 
-            composite_date = year
+            composite_date = state.year
         
             with col1:
 
-                chart_source = df_long[df_long["year"] == year]
+                chart_source = df_long[df_long["year"] == state.year]
 
                 # R, B, G                
                 #colors = ['#ff0000','#0000ff', '#00ff00']
@@ -115,10 +125,10 @@ if __name__ == "__main__":
                 st.altair_chart(chart)
 
             with col2:
-                df_year = df_long[df_long["year"] == year]
+                df_year = df_long[df_long["year"] == state.year]
 
                 st.metric(label="city", value=city, help="City and year for analysis")
-                st.metric(label="year", value=year, help="City and year for analysis")
+                st.metric(label="year", value=state.year, help="City and year for analysis")
                 st.metric(
                     label="built up area [ha]", 
                     value=df_year[df_year["category"] == "built up area"]["hectares"],
@@ -143,7 +153,7 @@ if __name__ == "__main__":
 
         with cTab2:
 
-            if year < 2018:
+            if state.year < 2018:
                 st.subheader("No changes detectable")
                 st.markdown("""Change data is visible for 2018 and beyond.
                                Please select an appropriate year in the sidebar.""")
@@ -154,12 +164,12 @@ if __name__ == "__main__":
                 # 
                 # Change data
                 #
-                if year > 2017:
-                    prev_year = year - 1
+                if state.year > 2017:
+                    prev_year = state.year - 1
                 else:
-                    prev_year = year
+                    prev_year = state.year
 
-                df_year = df_long[df_long["year"] == year]
+                df_year = df_long[df_long["year"] == state.year]
                 df_prev_year = df_long[df_long["year"] == prev_year]
 
                 bua_year = df_year[df_year["category"] == "built up area"]["hectares"].sum()
@@ -185,7 +195,7 @@ if __name__ == "__main__":
                     df_change = pd.DataFrame(
                         columns=["delta_veg", "delta_bua", "no_change"],
                     )
-                    df_change["current year"] = [year]
+                    df_change["current year"] = [state.year]
                     df_change["delta veg"] = [delta_veg]
                     df_change["delta bua"] = [delta_bua]
                     #df_change["no change"] = [no_change]
@@ -215,7 +225,7 @@ if __name__ == "__main__":
                 with col2:
 
                     st.metric(label="city", value=city, help="City and year for analysis")
-                    st.metric(label="year", value=year, help="City and year for analysis")
+                    st.metric(label="year", value=state.year, help="City and year for analysis")
                     st.metric(
                         label="built up area [ha]", 
                         value=bua_year,
@@ -233,7 +243,7 @@ if __name__ == "__main__":
 
                 with col3:
                     st.image(
-                        f"../data/classified/{composite_date}_osm_nominatim_{city}_clipped_{year}_diff_{prev_year}.png",
+                        f"../data/classified/{composite_date}_osm_nominatim_{city}_clipped_{state.year}_diff_{prev_year}.png",
                         width=580,
                         use_column_width="auto"
                     )
