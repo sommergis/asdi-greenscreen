@@ -83,12 +83,19 @@ if __name__ == "__main__":
         #     profile = src.profile
         #     arry = src.read()
 
-        profile, arry = clip_raster(geojson_file_path=geojson_file_path, raster_file_path=input_dataset)
+        profile, arry = clip_raster(geojson_file_path=geojson_file_path, raster_file_path=input_dataset, nodata=255)
 
         print(f"\nStats classified {composite_date}:\n")
         veg_area = (np.nansum((arry == 1))*100/10000) + (np.nansum((arry == 2))*100/10000)
         bua_area = np.nansum((arry == 3))*100/10000
         other_area = np.nansum((arry == 0))*100/10000
+        nodata = np.nansum((arry == 255))
+        
+        print(f"veg: {np.nansum(arry == 1)}")
+        print(f"bua: {np.nansum(arry == 3)}")
+        print(f"other: {np.nansum(arry == 0)}")
+        print(f"nodata: {nodata}")
+
 
         veg.append(veg_area)
         bua.append(bua_area)
@@ -96,51 +103,67 @@ if __name__ == "__main__":
 
         dst_crs = "EPSG:3857"
 
+        profile.update(dict(
+            dtype="uint16",
+            nodata=255,
+        ))
         with rio.open(output_dataset, "w", **profile) as dest:
             dest.write(arry)
-            transform, width, height = rio.warp.calculate_default_transform(
-                dest.crs, dst_crs, dest.width, dest.height, *dest.bounds
-            )
+            # transform, width, height = rio.warp.calculate_default_transform(
+            #     dest.crs, dst_crs, dest.width, dest.height, *dest.bounds
+            # )
 
-        # RGB normalization
+        # RGB production
         
-        print(arry[:, 500, 500])
+        # print(arry[:, 500, 500])
 
         bands = {"red": arry.copy(), "green": arry.copy(), "blue": arry.copy(), "alpha": arry.copy()}
     
         # 0 => 0,0,0
+
+        # 0 => whitesmoke
+        # # rgb(245, 245, 245)
+        # better green: rgb(86, 192, 43)
+        # green 2: rgb(73, 182, 117)
         # 1 => 0,255,0
+        # better orange: rgb(249, 157, 38)
+        # orange 2: rgb(255, 136, 0)
         # 3 => 255,0,0
 
-        bands["red"][ np.where(arry == 0) ] = 0
-        bands["green"][ np.where(arry == 0) ] = 0
-        bands["blue"][ np.where(arry == 0) ] = 0
-        bands["alpha"][ np.where(arry == 0) ] = 0
+        bands["red"][ np.where(arry == 255) ] = 0
+        bands["green"][ np.where(arry == 255) ] = 0
+        bands["blue"][ np.where(arry == 255) ] = 0
+        bands["alpha"][ np.where(arry == 255) ] = 0
 
-        bands["red"][ np.where(arry == 1) ] = 0
-        bands["green"][ np.where(arry == 1) ] = 255
-        bands["blue"][ np.where(arry == 1) ] = 0
+        bands["red"][ np.where(arry == 0) ] = 245
+        bands["green"][ np.where(arry == 0) ] = 245
+        bands["blue"][ np.where(arry == 0) ] = 245
+        bands["alpha"][ np.where(arry == 0) ] = 255
+
+        bands["red"][ np.where(arry == 1) ] = 73
+        bands["green"][ np.where(arry == 1) ] = 182
+        bands["blue"][ np.where(arry == 1) ] = 117
         bands["alpha"][ np.where(arry == 1) ] = 255
 
-        bands["red"][ np.where(arry == 3) ] = 255
-        bands["green"][ np.where(arry == 3) ] = 0
-        bands["blue"][ np.where(arry == 3) ] = 0
+        bands["red"][ np.where(arry == 3) ] = 249
+        bands["green"][ np.where(arry == 3) ] = 157
+        bands["blue"][ np.where(arry == 3) ] = 38
         bands["alpha"][ np.where(arry == 3) ] = 255
 
         rgba = np.vstack([bands["red"], bands["green"], bands["blue"], bands["alpha"]])
 
-        print(rgba[:, 500, 500])
+        #print(rgba[:, 500, 500])
 
         profile.update(dict(
             driver="PNG",
             dtype="uint8",
-            nodata=0,
+            nodata=255,
             count=4,
             #worldfile=True,
-            crs=dst_crs,
-            transform=transform,
-            width=width,
-            height=height
+            #crs=dst_crs,
+            #transform=transform,
+            #width=width,
+            #height=height
         ))
         #print(profile)
         try:
@@ -150,17 +173,18 @@ if __name__ == "__main__":
             pass
 
         with rasterio.open(f"{output_dataset.replace('tif', 'png')}", 'w', **profile) as dst:
-            #dst.write(rgba)
-            for i in range(1, profile.get("count") +1):
-                rio.warp.reproject(
-                    source=rgba,
-                    destination=rasterio.band(dst, i),
-                    src_transform=dst.transform,
-                    src_crs=dst.crs,
-                    dst_transform=transform,
-                    dst_crs=dst_crs,
-                    resampling=Resampling.nearest
-                )
+            dst.write(rgba)
+
+            # for i in range(1, profile.get("count") +1):
+            #     rio.warp.reproject(
+            #         source=rgba,
+            #         destination=rasterio.band(dst, i),
+            #         src_transform=dst.transform,
+            #         src_crs=dst.crs,
+            #         dst_transform=transform,
+            #         dst_crs=dst_crs,
+            #         resampling=Resampling.nearest
+            #     )
 
     print(f"Vegetation & Cropland area ha, Built up area ha, Other area ha")
     print(f"{years}")
