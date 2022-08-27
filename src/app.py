@@ -333,7 +333,9 @@ if __name__ == "__main__":
             The following tools helped us in the project
             - [Amazon SageMaker Studio Lab](https://studiolab.sagemaker.aws/)
             - [rasterio](https://github.com/rasterio/rasterio)
-            - [scikit-learn](https://scikit-learn.org/stable/)
+            - [scikit-learn](https://scikit-learn.org/)
+            - [scikit-image](https://scikit-image.org/)
+            - [fast-glcm](https://github.com/tzm030329/GLCM)
             - [yed Live](https://www.yworks.com/yed-live/)
             - [streamlit](https://www.streamlit.io/)        
             - [Bottleneck](https://kwgoodman.github.io/bottleneck-doc/index.html)        
