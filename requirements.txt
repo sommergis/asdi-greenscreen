@@ -3,9 +3,10 @@ fiona
 scipy
 scikit-learn
 scikit-image
+cv2
 joblib
 matplotlib
 sat-search
-hdmedians
 Bottleneck
-numba
+streamlit
+altair
