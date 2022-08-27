@@ -48,10 +48,14 @@
 			<y:FreeNodePortLocationModelParameter x:Key="9" Ratio="0.010000000000000009,0.5"/>
 			<y:FreeNodePortLocationModelParameter x:Key="10" Ratio="0.99,0.5"/>
 			<y:FreeNodePortLocationModelParameter x:Key="11" Ratio="0.99,0.5"/>
-			<yjs:PolylineEdgeStyle x:Key="12" stroke="{y:GraphMLReference 13}" targetArrow="{y:GraphMLReference 14}"/>
-			<yjs:Stroke x:Key="13" fill="{y:GraphMLReference 15}"/>
-			<yjs:Arrow x:Key="14" type="TRIANGLE" scale="0.75" stroke="#FF663800" fill="#FF663800" cropLength="1"/>
-			<yjs:SolidColorFill x:Key="15" color="#FF663800"/>
+			<yjs:Font x:Key="12" fontSize="12" fontFamily="'Arial'"/>
+			<y:FreeNodePortLocationModelParameter x:Key="13" Ratio="0.5,0.019230769230769218"/>
+			<y:FreeNodePortLocationModelParameter x:Key="14" Ratio="0.99,0.5"/>
+			<yjs:PolylineEdgeStyle x:Key="15" stroke="{y:GraphMLReference 16}" targetArrow="{y:GraphMLReference 17}"/>
+			<yjs:Stroke x:Key="16" fill="#FF663800"/>
+			<yjs:Arrow x:Key="17" type="TRIANGLE" scale="0.75" stroke="#FF663800" fill="#FF663800" cropLength="1"/>
+			<yjs:PolylineEdgeStyle x:Key="18" stroke="{y:GraphMLReference 16}" targetArrow="{y:GraphMLReference 17}"/>
+			<yjs:Arrow x:Key="19" type="NONE" scale="0.75" stroke="#FF663800" fill="#FF663800"/>
 		</y:SharedData>
 	</data>
 	<graph id="G" edgedefault="directed">
@@ -90,6 +94,7 @@
 				<bpmn:EventNodeStyle minimumSize="20,20"/>
 			</data>
 			<port name="p0"/>
+			<port name="p1"/>
 		</node>
 		<node id="n1">
 			<data key="d0">2</data>
@@ -105,7 +110,7 @@ city boundary]]></y:Label.Text>
 				</x:List>
 			</data>
 			<data key="d5">
-				<y:RectD X="-688.25" Y="-153.5" Width="98" Height="50"/>
+				<y:RectD X="-849.25" Y="-153.5" Width="98" Height="50"/>
 			</data>
 			<data key="d7">
 				<bpmn:ActivityNodeStyle minimumSize="40,40"/>
@@ -119,15 +124,16 @@ city boundary]]></y:Label.Text>
 			<port name="p2"/>
 			<port name="p3"/>
 			<port name="p4"/>
+			<port name="p5"/>
 		</node>
 		<node id="n2">
 			<data key="d0">6</data>
 			<data key="d4">
 				<x:List>
 					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[calculate NDBI]]></y:Label.Text>
+						<y:Label.Text><![CDATA[prepare features]]></y:Label.Text>
 						<y:Label.Style>
-							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
+							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 12}" textFill="BLACK"/>
 						</y:Label.Style>
 					</y:Label>
 				</x:List>
@@ -183,7 +189,7 @@ city boundary]]></y:Label.Text>
 				</x:List>
 			</data>
 			<data key="d5">
-				<y:RectD X="-514" Y="-153.5" Width="98" Height="50"/>
+				<y:RectD X="-682" Y="-153.5" Width="98" Height="50"/>
 			</data>
 			<data key="d7">
 				<bpmn:ActivityNodeStyle minimumSize="40,40"/>
@@ -201,7 +207,7 @@ city boundary]]></y:Label.Text>
 			<port name="p6"/>
 			<port name="p7">
 				<data key="d16">
-					<y:FreeNodePortLocationModelParameter Ratio="0.5,0.019230769230769218"/>
+					<y:GraphMLReference ResourceKey="13"/>
 				</data>
 			</port>
 		</node>
@@ -210,7 +216,7 @@ city boundary]]></y:Label.Text>
 			<data key="d4">
 				<x:List>
 					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[clip satellite scenes to city boundary]]></y:Label.Text>
+						<y:Label.Text><![CDATA[create median composites for each year]]></y:Label.Text>
 						<y:Label.Style>
 							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
 						</y:Label.Style>
@@ -235,13 +241,15 @@ city boundary]]></y:Label.Text>
 			<port name="p5"/>
 			<port name="p6"/>
 			<port name="p7"/>
+			<port name="p8"/>
+			<port name="p9"/>
 		</node>
 		<node id="n5">
 			<data key="d0">9</data>
 			<data key="d4">
 				<x:List>
 					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[Mask out cloud pixels in scenes]]></y:Label.Text>
+						<y:Label.Text><![CDATA[get esa worldcover 2020]]></y:Label.Text>
 						<y:Label.Style>
 							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
 						</y:Label.Style>
@@ -272,7 +280,7 @@ city boundary]]></y:Label.Text>
 			<data key="d4">
 				<x:List>
 					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[calculate NDVI]]></y:Label.Text>
+						<y:Label.Text><![CDATA[calculate remote sensing indices and GLCM features]]></y:Label.Text>
 						<y:Label.Style>
 							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
 						</y:Label.Style>
@@ -305,59 +313,26 @@ city boundary]]></y:Label.Text>
 			<port name="p9"/>
 		</node>
 		<node id="n7">
-			<data key="d0">11</data>
-			<data key="d4">
-				<x:List>
-					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[define best date for analysis]]></y:Label.Text>
-						<y:Label.Style>
-							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
-						</y:Label.Style>
-					</y:Label>
-				</x:List>
-			</data>
-			<data key="d5">
-				<y:RectD X="-852.375" Y="-153.5" Width="98" Height="50"/>
-			</data>
-			<data key="d7">
-				<bpmn:ActivityNodeStyle minimumSize="40,40"/>
-			</data>
-			<port name="p0">
-				<data key="d16">
-					<y:GraphMLReference ResourceKey="3"/>
-				</data>
-			</port>
-			<port name="p1"/>
-			<port name="p2"/>
-			<port name="p3"/>
-			<port name="p4"/>
-			<port name="p5"/>
-			<port name="p6">
-				<data key="d16">
-					<y:FreeNodePortLocationModelParameter Ratio="0.5,0.019230769230769218"/>
-				</data>
-			</port>
-		</node>
-		<node id="n8">
 			<data key="d0">12</data>
 			<data key="d4">
 				<x:List>
 					<y:Label LayoutParameter="{y:GraphMLReference 5}" Style="{y:GraphMLReference 4}">
-						<y:Label.Text><![CDATA[maybe we should operate with
+						<y:Label.Text><![CDATA[ we operate with
  temporal composites because 
-of cloudy pixels and more robustness]]></y:Label.Text>
+of cloudy pixels and more robustness
+of the classification]]></y:Label.Text>
 					</y:Label>
 				</x:List>
 			</data>
 			<data key="d5">
-				<y:RectD X="-626.6875" Y="-281" Width="218" Height="66"/>
+				<y:RectD X="-399.75" Y="-292" Width="218" Height="77"/>
 			</data>
 			<data key="d7">
 				<bpmn:AnnotationNodeStyle/>
 			</data>
 			<port name="p0"/>
 		</node>
-		<node id="n9">
+		<node id="n8">
 			<data key="d0">13</data>
 			<data key="d4">
 				<x:List>
@@ -372,7 +347,7 @@ NDVI = (B08-B04)/(B08+B04)]]></y:Label.Text>
 				</x:List>
 			</data>
 			<data key="d5">
-				<y:RectD X="-59.5" Y="-153.5" Width="203" Height="66"/>
+				<y:RectD X="-59.5" Y="-227.75" Width="203" Height="66"/>
 			</data>
 			<data key="d7">
 				<bpmn:AnnotationNodeStyle/>
@@ -380,7 +355,7 @@ NDVI = (B08-B04)/(B08+B04)]]></y:Label.Text>
 			<port name="p0"/>
 			<port name="p1"/>
 		</node>
-		<node id="n10">
+		<node id="n9">
 			<data key="d0">14</data>
 			<data key="d4">
 				<x:List>
@@ -404,7 +379,7 @@ NDBI = (B11-B08)/(B11+B08)]]></y:Label.Text>
 			<port name="p1"/>
 			<port name="p2"/>
 		</node>
-		<node id="n11">
+		<node id="n10">
 			<data key="d0">16</data>
 			<data key="d4">
 				<x:List>
@@ -444,12 +419,12 @@ NDBI = (B11-B08)/(B11+B08)]]></y:Label.Text>
 			</data>
 			<port name="p0"/>
 		</node>
-		<node id="n12">
+		<node id="n11">
 			<data key="d0">17</data>
 			<data key="d4">
 				<x:List>
 					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[classify NDVI to green area classes (GAC) ]]></y:Label.Text>
+						<y:Label.Text><![CDATA[train ML model with esa worldcover as ground truth]]></y:Label.Text>
 						<y:Label.Style>
 							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
 						</y:Label.Style>
@@ -500,12 +475,71 @@ NDBI = (B11-B08)/(B11+B08)]]></y:Label.Text>
 			<port name="p11"/>
 			<port name="p12"/>
 		</node>
-		<node id="n13">
+		<node id="n12">
 			<data key="d0">18</data>
 			<data key="d4">
 				<x:List>
 					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[calc. GA stats for city boundary]]></y:Label.Text>
+						<y:Label.Text><![CDATA[clip results to city boundary]]></y:Label.Text>
+						<y:Label.Style>
+							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
+						</y:Label.Style>
+					</y:Label>
+				</x:List>
+			</data>
+			<data key="d5">
+				<y:RectD X="-688.25" Y="56.5" Width="98" Height="50"/>
+			</data>
+			<data key="d7">
+				<bpmn:ActivityNodeStyle minimumSize="40,40"/>
+			</data>
+			<port name="p0">
+				<data key="d16">
+					<y:GraphMLReference ResourceKey="3"/>
+				</data>
+			</port>
+			<port name="p1"/>
+			<port name="p2"/>
+			<port name="p3"/>
+			<port name="p4">
+				<data key="d16">
+					<y:GraphMLReference ResourceKey="7"/>
+				</data>
+			</port>
+			<port name="p5">
+				<data key="d16">
+					<y:GraphMLReference ResourceKey="8"/>
+				</data>
+			</port>
+			<port name="p6">
+				<data key="d16">
+					<y:GraphMLReference ResourceKey="9"/>
+				</data>
+			</port>
+			<port name="p7">
+				<data key="d16">
+					<y:GraphMLReference ResourceKey="10"/>
+				</data>
+			</port>
+			<port name="p8"/>
+			<port name="p9">
+				<data key="d16">
+					<y:GraphMLReference ResourceKey="11"/>
+				</data>
+			</port>
+			<port name="p10"/>
+			<port name="p11"/>
+			<port name="p12"/>
+			<port name="p13"/>
+			<port name="p14"/>
+		</node>
+		<node id="n13">
+			<data key="d0">19</data>
+			<data key="d4">
+				<x:List>
+					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
+						<y:Label.Text><![CDATA[calculate
+ statistics]]></y:Label.Text>
 						<y:Label.Style>
 							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
 						</y:Label.Style>
@@ -553,78 +587,22 @@ NDBI = (B11-B08)/(B11+B08)]]></y:Label.Text>
 				</data>
 			</port>
 			<port name="p10"/>
-			<port name="p11"/>
-			<port name="p12"/>
-			<port name="p13"/>
-		</node>
-		<node id="n14">
-			<data key="d0">19</data>
-			<data key="d4">
-				<x:List>
-					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[calc. BUA stats for city boundary]]></y:Label.Text>
-						<y:Label.Style>
-							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
-						</y:Label.Style>
-					</y:Label>
-				</x:List>
-			</data>
-			<data key="d5">
-				<y:RectD X="-339.75" Y="56.5" Width="98" Height="50"/>
-			</data>
-			<data key="d7">
-				<bpmn:ActivityNodeStyle minimumSize="40,40"/>
-			</data>
-			<port name="p0">
-				<data key="d16">
-					<y:GraphMLReference ResourceKey="3"/>
-				</data>
-			</port>
-			<port name="p1"/>
-			<port name="p2"/>
-			<port name="p3"/>
-			<port name="p4">
-				<data key="d16">
-					<y:GraphMLReference ResourceKey="7"/>
-				</data>
-			</port>
-			<port name="p5">
-				<data key="d16">
-					<y:GraphMLReference ResourceKey="8"/>
-				</data>
-			</port>
-			<port name="p6">
-				<data key="d16">
-					<y:GraphMLReference ResourceKey="9"/>
-				</data>
-			</port>
-			<port name="p7">
-				<data key="d16">
-					<y:GraphMLReference ResourceKey="10"/>
-				</data>
-			</port>
-			<port name="p8"/>
-			<port name="p9">
-				<data key="d16">
-					<y:GraphMLReference ResourceKey="11"/>
-				</data>
-			</port>
-			<port name="p10"/>
 			<port name="p11">
 				<data key="d16">
-					<y:FreeNodePortLocationModelParameter Ratio="0.99,0.5"/>
+					<y:GraphMLReference ResourceKey="14"/>
 				</data>
 			</port>
 			<port name="p12"/>
 			<port name="p13"/>
 			<port name="p14"/>
+			<port name="p15"/>
 		</node>
-		<node id="n15">
+		<node id="n14">
 			<data key="d0">20</data>
 			<data key="d4">
 				<x:List>
 					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[classify NDBI to built up area classes (BUC) ]]></y:Label.Text>
+						<y:Label.Text><![CDATA[classify median composites 2017-2022 with ML model]]></y:Label.Text>
 						<y:Label.Style>
 							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
 						</y:Label.Style>
@@ -677,13 +655,162 @@ NDBI = (B11-B08)/(B11+B08)]]></y:Label.Text>
 			<port name="p13"/>
 			<port name="p14"/>
 			<port name="p15"/>
+			<port name="p16">
+				<data key="d16">
+					<y:FreeNodePortLocationModelParameter Ratio="0.5,0.9807692307692308"/>
+				</data>
+			</port>
+			<port name="p17"/>
+			<port name="p18"/>
+		</node>
+		<node id="n15">
+			<data key="d0">22</data>
+			<data key="d4">
+				<x:List>
+					<y:Label LayoutParameter="{y:GraphMLReference 5}">
+						<y:Label.Text><![CDATA[SCL Band for cloud detection;
+only keep certain pixels:
+(4,5,6,7)]]></y:Label.Text>
+						<y:Label.Style>
+							<yjs:DefaultLabelStyle font="{y:GraphMLReference 2}" textFill="BLACK"/>
+						</y:Label.Style>
+					</y:Label>
+				</x:List>
+			</data>
+			<data key="d5">
+				<y:RectD X="-59.5" Y="24" Width="203" Height="66"/>
+			</data>
+			<data key="d7">
+				<bpmn:AnnotationNodeStyle/>
+			</data>
+			<port name="p0"/>
+			<port name="p1"/>
+			<port name="p2"/>
 		</node>
 		<node id="n16">
-			<data key="d0">21</data>
+			<data key="d0">26</data>
 			<data key="d4">
 				<x:List>
 					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[create fusion of GAC & BUC]]></y:Label.Text>
+						<y:Label.Text><![CDATA[Core Processing for each year from 2017 to 2022]]></y:Label.Text>
+						<y:Label.Style>
+							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" textFill="BLACK" textSize="16">
+								<yjs:DefaultLabelStyle.font>
+									<yjs:Font fontSize="16" fontFamily="'Arial'" fontWeight="BOLD"/>
+								</yjs:DefaultLabelStyle.font>
+							</yjs:DefaultLabelStyle>
+						</y:Label.Style>
+					</y:Label>
+				</x:List>
+			</data>
+			<data key="d5">
+				<y:RectD X="-947.875" Y="-366.25" Width="1091.375" Height="41.5"/>
+			</data>
+			<data key="d7">
+				<bpmn:AnnotationNodeStyle/>
+			</data>
+			<port name="p0"/>
+			<port name="p1"/>
+		</node>
+		<node id="n17">
+			<data key="d0">27</data>
+			<data key="d4">
+				<x:List>
+					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
+						<y:Label.Text><![CDATA[mask out cloudy pixels in scenes]]></y:Label.Text>
+						<y:Label.Style>
+							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 12}" textFill="BLACK"/>
+						</y:Label.Style>
+					</y:Label>
+				</x:List>
+			</data>
+			<data key="d5">
+				<y:RectD X="-510.875" Y="-153.5" Width="98" Height="50"/>
+			</data>
+			<data key="d7">
+				<bpmn:ActivityNodeStyle minimumSize="40,40"/>
+			</data>
+			<port name="p0">
+				<data key="d16">
+					<y:GraphMLReference ResourceKey="3"/>
+				</data>
+			</port>
+			<port name="p1"/>
+			<port name="p2"/>
+			<port name="p3"/>
+			<port name="p4"/>
+			<port name="p5"/>
+			<port name="p6"/>
+			<port name="p7">
+				<data key="d16">
+					<y:GraphMLReference ResourceKey="13"/>
+				</data>
+			</port>
+			<port name="p8"/>
+			<port name="p9"/>
+			<port name="p10"/>
+		</node>
+		<node id="n18">
+			<data key="d0">28</data>
+			<data key="d4">
+				<x:List>
+					<y:Label LayoutParameter="{y:GraphMLReference 5}">
+						<y:Label.Text><![CDATA[NDWI = (NIR-SWIR)/(NIR+SWIR)
+Sentinel2: 
+NDBI = (B08-B11)/(B08+B11)]]></y:Label.Text>
+						<y:Label.Style>
+							<yjs:DefaultLabelStyle font="{y:GraphMLReference 2}" textFill="BLACK"/>
+						</y:Label.Style>
+					</y:Label>
+				</x:List>
+			</data>
+			<data key="d5">
+				<y:RectD X="-59.5" Y="-146.25" Width="203" Height="66"/>
+			</data>
+			<data key="d7">
+				<bpmn:AnnotationNodeStyle/>
+			</data>
+			<port name="p0"/>
+			<port name="p1"/>
+			<port name="p2"/>
+		</node>
+		<node id="n19">
+			<data key="d0">29</data>
+			<data key="d4">
+				<x:List>
+					<y:Label LayoutParameter="{y:GraphMLReference 5}">
+						<y:Label.Text><![CDATA[3 Classes from ESA Worldcover:
+- 10,20,30,40: vegetation
+- 50,60: non vegetation / bare soil
+- >= 70: other]]></y:Label.Text>
+						<y:Label.Style>
+							<yjs:DefaultLabelStyle font="{y:GraphMLReference 2}" textFill="BLACK"/>
+						</y:Label.Style>
+					</y:Label>
+				</x:List>
+			</data>
+			<data key="d5">
+				<y:RectD X="-912.375" Y="140" Width="218" Height="77"/>
+			</data>
+			<data key="d7">
+				<bpmn:AnnotationNodeStyle/>
+			</data>
+			<port name="p0"/>
+			<port name="p1"/>
+			<port name="p2"/>
+			<port name="p3">
+				<data key="d16">
+					<y:FreeNodePortLocationModelParameter Ratio="0.5,0.01470588235294118"/>
+				</data>
+			</port>
+		</node>
+		<node id="n20">
+			<data key="d0">30</data>
+			<data key="d4">
+				<x:List>
+					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
+						<y:Label.Text><![CDATA[create 
+images]]></y:Label.Text>
 						<y:Label.Style>
 							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" wrapping="WORD" clipText="false" font="{y:GraphMLReference 2}" textFill="BLACK"/>
 						</y:Label.Style>
@@ -691,7 +818,7 @@ NDBI = (B11-B08)/(B11+B08)]]></y:Label.Text>
 				</x:List>
 			</data>
 			<data key="d5">
-				<y:RectD X="-688.25" Y="56.5" Width="98" Height="50"/>
+				<y:RectD X="-339.75" Y="56.5" Width="98" Height="50"/>
 			</data>
 			<data key="d7">
 				<bpmn:ActivityNodeStyle minimumSize="40,40"/>
@@ -731,144 +858,23 @@ NDBI = (B11-B08)/(B11+B08)]]></y:Label.Text>
 				</data>
 			</port>
 			<port name="p10"/>
-			<port name="p11"/>
+			<port name="p11">
+				<data key="d16">
+					<y:GraphMLReference ResourceKey="14"/>
+				</data>
+			</port>
 			<port name="p12"/>
 			<port name="p13"/>
 			<port name="p14"/>
 			<port name="p15"/>
 			<port name="p16"/>
-			<port name="p17"/>
 		</node>
-		<node id="n17">
-			<data key="d0">22</data>
-			<data key="d4">
-				<x:List>
-					<y:Label LayoutParameter="{y:GraphMLReference 5}">
-						<y:Label.Text><![CDATA[SCL Band for cloud detection;
-only keep certain pixels:
-(4,5,6,7)]]></y:Label.Text>
-						<y:Label.Style>
-							<yjs:DefaultLabelStyle font="{y:GraphMLReference 2}" textFill="BLACK"/>
-						</y:Label.Style>
-					</y:Label>
-				</x:List>
-			</data>
-			<data key="d5">
-				<y:RectD X="-59.5" Y="24" Width="203" Height="66"/>
-			</data>
-			<data key="d7">
-				<bpmn:AnnotationNodeStyle/>
-			</data>
-			<port name="p0"/>
-			<port name="p1"/>
-			<port name="p2"/>
-		</node>
-		<node id="n18">
-			<data key="d0">23</data>
-			<data key="d4">
-				<x:List>
-					<y:Label LayoutParameter="{y:GraphMLReference 5}">
-						<y:Label.Text><![CDATA[depends on climate zone and 
-hemisphere; 
-e.g. for moderate climate 
-zones, northern hemisphere: start of june]]></y:Label.Text>
-						<y:Label.Style>
-							<yjs:DefaultLabelStyle font="{y:GraphMLReference 2}" textFill="BLACK"/>
-						</y:Label.Style>
-					</y:Label>
-				</x:List>
-			</data>
-			<data key="d5">
-				<y:RectD X="-921.375" Y="-293" Width="236" Height="78"/>
-			</data>
-			<data key="d7">
-				<bpmn:AnnotationNodeStyle/>
-			</data>
-			<port name="p0"/>
-			<port name="p1"/>
-		</node>
-		<node id="n19">
-			<data key="d0">24</data>
-			<data key="d4">
-				<x:List>
-					<y:Label LayoutParameter="{y:GraphMLReference 5}">
-						<y:Label.Text><![CDATA[TODO: check if we can develop an 
-algorithm for detecting the core 
-urban area within city boundary]]></y:Label.Text>
-						<y:Label.Style>
-							<yjs:DefaultLabelStyle font="{y:GraphMLReference 2}" textFill="BLACK"/>
-						</y:Label.Style>
-					</y:Label>
-				</x:List>
-			</data>
-			<data key="d5">
-				<y:RectD X="-372" Y="-281" Width="218" Height="66"/>
-			</data>
-			<data key="d7">
-				<bpmn:AnnotationNodeStyle/>
-			</data>
-			<port name="p0"/>
-			<port name="p1"/>
-		</node>
-		<node id="n20">
-			<data key="d0">25</data>
-			<data key="d4">
-				<x:List>
-					<y:Label LayoutParameter="{y:GraphMLReference 5}">
-						<y:Label.Text><![CDATA[Maybe reclassify GAC and BUC
- for obtaining vegetation pixels 
-and built up pixels]]></y:Label.Text>
-						<y:Label.Style>
-							<yjs:DefaultLabelStyle font="{y:GraphMLReference 2}" textFill="BLACK"/>
-						</y:Label.Style>
-					</y:Label>
-				</x:List>
-			</data>
-			<data key="d5">
-				<y:RectD X="-748.25" Y="140" Width="218" Height="66"/>
-			</data>
-			<data key="d7">
-				<bpmn:AnnotationNodeStyle/>
-			</data>
-			<port name="p0"/>
-			<port name="p1"/>
-		</node>
-		<node id="n21">
-			<data key="d0">26</data>
-			<data key="d4">
-				<x:List>
-					<y:Label LayoutParameter="{x:Static y:InteriorStretchLabelModel.Center}">
-						<y:Label.Text><![CDATA[Core Processing for each year from 2017 to 2022]]></y:Label.Text>
-						<y:Label.Style>
-							<yjs:DefaultLabelStyle verticalTextAlignment="CENTER" horizontalTextAlignment="CENTER" textFill="BLACK" textSize="16">
-								<yjs:DefaultLabelStyle.font>
-									<yjs:Font fontSize="16" fontFamily="'Arial'" fontWeight="BOLD"/>
-								</yjs:DefaultLabelStyle.font>
-							</yjs:DefaultLabelStyle>
-						</y:Label.Style>
-					</y:Label>
-				</x:List>
-			</data>
-			<data key="d5">
-				<y:RectD X="-947.875" Y="-366.25" Width="1091.375" Height="41.5"/>
-			</data>
-			<data key="d7">
-				<bpmn:AnnotationNodeStyle/>
-			</data>
-			<port name="p0"/>
-			<port name="p1"/>
-		</node>
-		<edge id="e0" source="n0" target="n7" sourceport="p0" targetport="p4">
+		<edge id="e0" source="n3" target="n17" sourceport="p5" targetport="p8">
 			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
+				<y:GraphMLReference ResourceKey="15"/>
 			</data>
 		</edge>
-		<edge id="e1" source="n3" target="n4" sourceport="p5" targetport="p5">
-			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
-			</data>
-		</edge>
-		<edge id="e2" source="n4" target="n5" sourceport="p6" targetport="p6">
+		<edge id="e1" source="n4" target="n5" sourceport="p6" targetport="p6">
 			<data key="d12">
 				<x:List>
 					<y:Bend Location="-203.625,-128.5"/>
@@ -877,39 +883,30 @@ and built up pixels]]></y:Label.Text>
 				</x:List>
 			</data>
 			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
+				<y:GraphMLReference ResourceKey="15"/>
 			</data>
 		</edge>
-		<edge id="e3" source="n5" target="n6" sourceport="p7" targetport="p7">
+		<edge id="e2" source="n5" target="n6" sourceport="p7" targetport="p7">
 			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
+				<y:GraphMLReference ResourceKey="15"/>
 			</data>
 		</edge>
-		<edge id="e4" source="n1" target="n3" sourceport="p3" targetport="p6">
+		<edge id="e3" source="n1" target="n3" sourceport="p3" targetport="p6">
 			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
+				<y:GraphMLReference ResourceKey="15"/>
 			</data>
 		</edge>
-		<edge id="e5" source="n7" target="n1" sourceport="p5" targetport="p4">
+		<edge id="e4" source="n7" target="n4" sourceport="p0" targetport="p9">
 			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
+				<yjs:PolylineEdgeStyle stroke="{y:GraphMLReference 16}" targetArrow="{y:GraphMLReference 19}"/>
 			</data>
 		</edge>
-		<edge id="e6" source="n8" target="n3" sourceport="p0" targetport="p7">
+		<edge id="e5" source="n6" target="n2" sourceport="p8" targetport="p7">
 			<data key="d13">
-				<yjs:PolylineEdgeStyle stroke="{y:GraphMLReference 13}">
-					<yjs:PolylineEdgeStyle.targetArrow>
-						<yjs:Arrow type="NONE" scale="0.75" stroke="#FF663800" fill="{y:GraphMLReference 15}"/>
-					</yjs:PolylineEdgeStyle.targetArrow>
-				</yjs:PolylineEdgeStyle>
+				<y:GraphMLReference ResourceKey="15"/>
 			</data>
 		</edge>
-		<edge id="e7" source="n6" target="n2" sourceport="p8" targetport="p7">
-			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
-			</data>
-		</edge>
-		<edge id="e8" source="n12" target="n15" sourceport="p11" targetport="p13">
+		<edge id="e6" source="n11" target="n14" sourceport="p11" targetport="p13">
 			<data key="d12">
 				<x:List>
 					<y:Bend Location="-203.625,-23.5"/>
@@ -918,59 +915,47 @@ and built up pixels]]></y:Label.Text>
 				</x:List>
 			</data>
 			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
+				<y:GraphMLReference ResourceKey="15"/>
 			</data>
 		</edge>
-		<edge id="e9" source="n13" target="n14" sourceport="p11" targetport="p12">
+		<edge id="e7" source="n12" target="n13" sourceport="p11" targetport="p12">
 			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
+				<y:GraphMLReference ResourceKey="15"/>
 			</data>
 		</edge>
-		<edge id="e10" source="n16" target="n13" sourceport="p16" targetport="p13">
+		<edge id="e8" source="n20" target="n10" sourceport="p15" targetport="p0">
 			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
+				<y:GraphMLReference ResourceKey="15"/>
 			</data>
 		</edge>
-		<edge id="e11" source="n15" target="n16" sourceport="p15" targetport="p15">
+		<edge id="e9" source="n2" target="n11" sourceport="p10" targetport="p12">
 			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
+				<yjs:PolylineEdgeStyle stroke="{y:GraphMLReference 16}" targetArrow="{y:GraphMLReference 17}"/>
 			</data>
 		</edge>
-		<edge id="e12" source="n14" target="n11" sourceport="p14" targetport="p0">
+		<edge id="e10" source="n0" target="n1" sourceport="p1" targetport="p5">
 			<data key="d13">
-				<y:GraphMLReference ResourceKey="12"/>
+				<y:GraphMLReference ResourceKey="18"/>
 			</data>
 		</edge>
-		<edge id="e13" source="n2" target="n12" sourceport="p10" targetport="p12">
+		<edge id="e11" source="n17" target="n4" sourceport="p9" targetport="p8">
 			<data key="d13">
-				<yjs:PolylineEdgeStyle stroke="{y:GraphMLReference 13}" targetArrow="{y:GraphMLReference 14}"/>
+				<y:GraphMLReference ResourceKey="18"/>
 			</data>
 		</edge>
-		<edge id="e14" source="n18" target="n7" sourceport="p1" targetport="p6">
+		<edge id="e12" source="n14" target="n19" sourceport="p17" targetport="p3">
 			<data key="d13">
-				<yjs:PolylineEdgeStyle stroke="{y:GraphMLReference 13}">
-					<yjs:PolylineEdgeStyle.targetArrow>
-						<yjs:Arrow type="NONE" scale="0.75" stroke="#FF663800" fill="{y:GraphMLReference 15}"/>
-					</yjs:PolylineEdgeStyle.targetArrow>
-				</yjs:PolylineEdgeStyle>
+				<yjs:PolylineEdgeStyle stroke="{y:GraphMLReference 16}" targetArrow="{y:GraphMLReference 19}"/>
 			</data>
 		</edge>
-		<edge id="e15" source="n19" target="n4" sourceport="p1" targetport="p7">
+		<edge id="e13" source="n14" target="n12" sourceport="p18" targetport="p14">
 			<data key="d13">
-				<yjs:PolylineEdgeStyle stroke="{y:GraphMLReference 13}">
-					<yjs:PolylineEdgeStyle.targetArrow>
-						<yjs:Arrow type="NONE" scale="0.75" stroke="#FF663800" fill="{y:GraphMLReference 15}"/>
-					</yjs:PolylineEdgeStyle.targetArrow>
-				</yjs:PolylineEdgeStyle>
+				<y:GraphMLReference ResourceKey="18"/>
 			</data>
 		</edge>
-		<edge id="e16" source="n20" target="n16" sourceport="p1" targetport="p17">
+		<edge id="e14" source="n13" target="n20" sourceport="p15" targetport="p16">
 			<data key="d13">
-				<yjs:PolylineEdgeStyle stroke="{y:GraphMLReference 13}">
-					<yjs:PolylineEdgeStyle.targetArrow>
-						<yjs:Arrow type="NONE" scale="0.75" stroke="#FF663800" fill="{y:GraphMLReference 15}"/>
-					</yjs:PolylineEdgeStyle.targetArrow>
-				</yjs:PolylineEdgeStyle>
+				<y:GraphMLReference ResourceKey="18"/>
 			</data>
 		</edge>
 	</graph>
