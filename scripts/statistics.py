@@ -75,12 +75,16 @@ def calc_change_stats(stats, city):
         delta_bua = bua_year - bua_prev_year
         delta_veg = veg_year - veg_prev_year
         
-        print(f"delta_bua: {delta_bua}")
-        print(f"delta_veg: {delta_veg}")
+        # print(f"delta_bua: {delta_bua}")
+        # print(f"delta_veg: {delta_veg}")
 
-        rows.append((city, year, prev_year, "delta_bua", delta_bua, "delta_veg", delta_veg))
+        rows.append((city, year, prev_year, "delta_bua", delta_bua))
+        rows.append((city, year, prev_year, "delta_veg", delta_veg))
 
-    change_df = change_df.from_records(rows)
+    change_df = change_df.from_records(
+        rows,
+        columns=["city","year","prev_year","category","hectares"]
+    )
     
     return change_df
     
