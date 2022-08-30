@@ -1,0 +1,11 @@
+city,year,prev_year,category,hectares
+Freising,2017,2017,delta_bua,0.0
+Freising,2017,2017,delta_veg,0.0
+Freising,2018,2017,delta_bua,-77.02999999999997
+Freising,2018,2017,delta_veg,79.20000000000073
+Freising,2019,2018,delta_bua,81.63
+Freising,2019,2018,delta_veg,-82.55000000000018
+Freising,2020,2019,delta_bua,60.379999999999995
+Freising,2020,2019,delta_veg,-68.02000000000044
+Freising,2021,2020,delta_bua,-102.23000000000002
+Freising,2021,2020,delta_veg,110.21000000000004

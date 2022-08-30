@@ -1,0 +1,22 @@
+
+Classifier: MLPClassifier
+Vars: {'max_iter': 200, 'hidden_layer_sizes': (10, 10, 10), 'early_stopping': True, 'activation': 'relu', 'random_state': 0}
+Confusion matrix:
+ [[  2400    334    139]
+ [   173 260299   3724]
+ [    52   5631  26360]]
+Classification report:
+               precision    recall  f1-score   support
+
+           0       0.91      0.84      0.87      2873
+           1       0.98      0.99      0.98    264196
+           3       0.87      0.82      0.85     32043
+
+    accuracy                           0.97    299112
+   macro avg       0.92      0.88      0.90    299112
+weighted avg       0.97      0.97      0.97    299112
+
+Score was: 0.9663905159271443
+\composite dataset(s): ../data/composites/median_Freising_2020.tif
+
+training dataset(s): ../data/esa_worldcover_Freising.tif
