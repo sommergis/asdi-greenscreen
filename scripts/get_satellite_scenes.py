@@ -239,7 +239,7 @@ def compute_median_stack(all_scenes_stack):
     return calc_median(all_scenes_stack)
 
 
-def create_median_composites(geojson_file_path, city, years=[2017,2018,2019,2021], max_cloudcover=40):
+def create_median_composites(geojson_file_path, city, data_dir, years=[2017,2018,2019,2021], max_cloudcover=40):
     """ Main function for creation of median composites for the given city geojson and years """
 
     with open(geojson_file_path,"r") as fp:
@@ -262,7 +262,7 @@ def create_median_composites(geojson_file_path, city, years=[2017,2018,2019,2021
     #
     for year in years:
 
-        output_dataset = f"../data/composites/median_{city}_{year}.tif"
+        output_dataset = f"{data_dir}/composites/median_{city}_{year}.tif"
 
         quarter_medians = []
 
@@ -366,10 +366,10 @@ def create_median_composites(geojson_file_path, city, years=[2017,2018,2019,2021
             dst.write(year_median.astype("uint16"))
 
  
-def create_esa_worldcover(city, reference_file, esa_url="s3://esa-worldcover/v100/2020/ESA_WorldCover_10m_2020_v100_Map_AWS.vrt"):
+def create_esa_worldcover(city, data_dir, reference_file, esa_url="s3://esa-worldcover/v100/2020/ESA_WorldCover_10m_2020_v100_Map_AWS.vrt"):
     """ Creates clipped esa worldcover raster WGS84 for the given Sentinel 2 image (UTM) """
 
-    output_dataset = f"./data/esa_worldcover_{city}.tif"
+    output_dataset = f"{data_dir}/esa_worldcover_{city}.tif"
 
     # AWS_NO_SIGN_REQUEST for ESA Worldcover access
     env = {}
@@ -386,8 +386,6 @@ def create_esa_worldcover(city, reference_file, esa_url="s3://esa-worldcover/v10
             dst_width = src.width
             dst_crs = src.crs
             src_transform = src.profile.get("transform")
-            print(src_transform)
-            print(f"height, width, crs: {dst_height, dst_width, dst_crs}")
 
         dst_transform = src_transform
 

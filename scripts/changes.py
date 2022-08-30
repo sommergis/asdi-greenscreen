@@ -28,8 +28,13 @@ def calc_diff(arry1, arry2):
     return arry1 - arry2
 
 
-def create_change_geotiff(input_dataset_cur_year, input_dataset_prev_year):
+def create_change_geotiff(city, baseline_year, compare_year, data_dir):
     """ Creates a change GeoTiff image from the given numpy arrays and returns the difference numpy array """
+
+    output_dataset = f"{data_dir}/classified/{city}_{baseline_year}_diff_{compare_year}_clipped.tif"
+
+    input_dataset_cur_year = f"{data_dir}/classified/{city}_{baseline_year}_clipped.tif"
+    input_dataset_prev_year = f"{data_dir}/classified/{city}_{compare_year}_clipped.tif"    
 
     with rio.open(input_dataset_cur_year, "r") as src:
         arry1 = src.read()
@@ -52,11 +57,13 @@ def create_change_geotiff(input_dataset_cur_year, input_dataset_prev_year):
     with rio.open(output_dataset, "w", **profile) as dst:
         dst.write(diff_arry)
 
-    return diff_arry
+    return diff_arry, profile
 
 
-def create_change_png_images(diff_arry, file_path):
+def create_change_png_image(city, baseline_year, compare_year, data_dir, diff_arry, rasterio_profile):
     """ Creates a PNG image from the given file_path """
+
+    output_dataset = f"{data_dir}/classified/{city}_{baseline_year}_diff_{compare_year}_clipped.png"
 
     arry = diff_arry.copy()
     bands = {"red": arry.copy(), "green": arry.copy(), "blue": arry.copy(), "alpha": arry.copy()}
@@ -109,7 +116,7 @@ def create_change_png_images(diff_arry, file_path):
     rgba = np.vstack([bands["red"], bands["green"], bands["blue"], bands["alpha"]])
     rgba = np.nan_to_num(rgba, 0)
 
-    profile.update(
+    rasterio_profile.update(
         dict(
             driver="PNG",
             dtype="uint8",
@@ -121,18 +128,22 @@ def create_change_png_images(diff_arry, file_path):
 
     # remove GeoTiff profile items
     try:
-        del profile["tiled"]
-        del profile["interleave"]
+        del rasterio_profile["tiled"]
+        del rasterio_profile["interleave"]
+        del rasterio_profile["blockxsize"]
+        del rasterio_profile["blockysize"]
+        del rasterio_profile["compress"]
     except:
         pass
 
-    with rasterio.open(f"{file_path}", 'w', **profile) as dst:
+    with rasterio.open(f"{output_dataset}", 'w', **rasterio_profile) as dst:
         dst.write(rgba)
 
 
 if __name__ == "__main__":
     
-    city = "Agadir"
+    data_dir = "../data"
+    city = "Freising"
     years = [2017,2018,2019,2020,2021]
 
     for year in years:
@@ -142,18 +153,17 @@ if __name__ == "__main__":
         else:
             continue
 
-        input_dataset_cur_year = f"../data/classified/{city}_{year}_clipped.tif"
-        input_dataset_prev_year = f"../data/classified/{city}_{prev_year}_clipped.tif"
-        
-        output_dataset = f"../data/classified/{city}_clipped_{year}_diff_{prev_year}.tif"
-
-
-        diff_arry = create_change_geotiff(
-            input_dataset_cur_year=input_dataset_cur_year,
-            input_dataset_prev_year=input_dataset_prev_year
+        diff_arry, profile = create_change_geotiff(
+            city=city, 
+            baseline_year=year, 
+            compare_year=prev_year,
+            data_dir=data_dir
         )
 
-        create_change_png_images(
-            diff_arry, 
-            file_path
+        create_change_png_image(
+            city=city,
+            composite_date=year,
+            data_dir=data_dir,
+            arry=diff_arry,
+            rasterio_profile=profile
         )

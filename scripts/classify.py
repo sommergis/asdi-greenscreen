@@ -11,7 +11,7 @@
 
 """
 
-
+import os
 import sys
 sys.path.append(os.path.join(os.getcwd(), ".."))
 
@@ -105,7 +105,6 @@ def train(*args, esa_landcover):
     else:
         stack = args[0]
 
-    print(stack.shape)
     rows, columns, bands = stack.shape
 
     stack_bands = bands
@@ -113,8 +112,6 @@ def train(*args, esa_landcover):
     # reshape array
     # from (1320, 1133, 12) to (1320 * 1133, 12)
     stack_reshaped = np.reshape(stack, (rows * columns, bands))
-
-    print(stack_reshaped.shape)
 
     # from (1320, 1133, 1) to (1320 * 1133, 1)
     rows, columns, bands = esa_landcover.shape
@@ -124,7 +121,6 @@ def train(*args, esa_landcover):
     # DataConversionWarning: A column-vector y was passed when a 1d array was expected. 
     # Please change the shape of y to (n_samples, ), for example using ravel(). y = column_or_1d(y, warn=True)
     esa_landcover = esa_landcover.squeeze()
-    print(esa_landcover.shape)
 
     # maybe thin out landcover per class
     # esa_landcover = np.random.choice(esa_landcover, esa_landcover.shape)
@@ -277,12 +273,7 @@ def predict(*args, model_path=""):
         for array in args:
             array_list.append(array.squeeze())
 
-        #stack = np.dstack(array_list)
-        
-        # Dimos tip
         stack = np.stack(array_list, axis=2)
-        print(stack.shape)
-        # axis=2
         rows, columns, bands = stack.shape
 
     else:
@@ -290,7 +281,7 @@ def predict(*args, model_path=""):
     
     rows, columns, bands = stack.shape
 
-    print(f"stack.shape: {stack.shape}")
+    #print(f"stack.shape: {stack.shape}")
     
     # reshape array
     stack_reshaped = np.reshape(stack, (rows * columns, bands))
@@ -304,14 +295,14 @@ def predict(*args, model_path=""):
     result_proba = clf.predict_proba(stack_reshaped)
 
     # # single band output - reshaping
-    print(f"result.shape: {result.shape}")
+    #print(f"result.shape: {result.shape}")
     bands = 1
     result = np.reshape(result, (bands, rows, columns))
 
-    print(f"result.shape: {result.shape}")
+    #print(f"result.shape: {result.shape}")
 
     # # single band output - reshaping
-    print(f"result_proba.shape: {result_proba.shape}")
+    #print(f"result_proba.shape: {result_proba.shape}")
     bands = result_proba.shape[1] # probability per class!
 
     result_probas = {}
@@ -322,7 +313,7 @@ def predict(*args, model_path=""):
         
         result_probas[n] = class_proba
 
-        print(f"result_proba.shape: {class_proba.shape}")
+        #print(f"result_proba.shape: {class_proba.shape}")
 
 
     return result, result_probas
@@ -359,9 +350,6 @@ def prepare_features(allbands, esa_landcover):
     ndmi = calc_ndmi(swir_array=b11, nir_array=b08)
     ndre1 = calc_ndre1(rededge_array_1=b05, rededge_array_2=b06)
 
-    # swap axis for image format for ML classifier
-    allbands = reshape_as_image(allbands)
-
     #
     # extract GLCM textures
     #
@@ -376,10 +364,17 @@ def prepare_features(allbands, esa_landcover):
     feature_stack = np.dstack([ndvi, ndwi, ndre1, homogeneity, entropy])
     
     # swap axis for image format for ML classifier
-    esa_landcover = reshape_as_image(esa_landcover)
+    feature_stack = reshape_as_raster(feature_stack)
+    feature_stack = reshape_as_image(feature_stack)
+
+    # swap axis for image format for ML classifier
+    esa_landcover_s = reshape_as_image(esa_landcover)
+
+    print(f"Feature stack shape: {feature_stack.shape}")
+    print(f"ESA worldcover shape: {esa_landcover_s.shape}")
 
     # check for x/y dimensions - z dimension is different
-    assert [feature_stack.shape[0],feature_stack.shape[1]] == [esa_landcover.shape[0],esa_landcover.shape[1]], \
+    assert [feature_stack.shape[0],feature_stack.shape[1]] == [esa_landcover_s.shape[0],esa_landcover_s.shape[1]], \
         f"S2 median stack and esa worldcover do not have the same dimensions!"
 
     # take care of nans for ML classifier
@@ -389,18 +384,18 @@ def prepare_features(allbands, esa_landcover):
     return feature_stack, esa_landcover
 
 
-def save_feature_stack(city, composite_date, data_dir, all_bands, rasterio_profile):
+def save_feature_stack(city, composite_date, data_dir, feature_stack, rasterio_profile):
     """ Saves feature stack to disk """
 
     # rasterio profile for saving training data to disk
     rasterio_profile.update({
         "dtype": "float32",
-        "count": allbands.shape[2],
+        "count": feature_stack.shape[2],
         "nodata": -99999
     })
 
     # reshape to format for rasterio (bands, rows, cols, bands)
-    allbands_img = reshape_as_raster(allbands)
+    allbands_img = reshape_as_raster(feature_stack)
 
     # for testing only - write band to file system
     with rio.open(f"{data_dir}/features/{city}_{composite_date}.tif", "w", **rasterio_profile) as dest:
