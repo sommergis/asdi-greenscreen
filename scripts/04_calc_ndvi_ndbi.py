@@ -1,159 +1,171 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# last update: 2022-08-05
+# last update: 2022-08-11
 # authors: jsommer
 
 """ 
-    01_create_ndvi.py 
+    04_calc_ndvi_ndbi.py 
     
-    Calculates NDVI
+    Calculate NDVI and NDBI remote sensing index for all given scenes.
 
 """
 
-import rasterio as rio
-import rasterio.mask
-from rasterio.warp import Resampling, aligned_target
-from rasterio.features import bounds
-from json import load
+import json
 import numpy as np
-
-# 1. ESA Worldcover: majority filter window for filling gaps inside urban areas (4326!)
-
-# VRT to COGs
-file = "s3://esa-worldcover/v100/2020/ESA_WorldCover_10m_2020_v100_Map_AWS.vrt"
-
-# geom extent
-# freising UTM 32N
-# bbox = [(695459.4375, 5356592), (706779.5, 5356592), (706779.5, 5369783.5), (695459.4375, 5369783.5)]
-
-file_path = "../../data/freising_extent.geojson"
-with open(file_path,"r") as src:
-    file_content = load(src)
-geometry = file_content["features"][0]["geometry"]
-
-bbox = [(11.64032077789306641, 48.33063125610362931),
-        (11.79197692871099434, 48.33063125610362931),
-        (11.79197692871099434, 48.44903182983404122),
-        (11.64032077789306641, 48.44903182983404122)]
-
-print((bbox[1][0], bbox[3][1], bbox[1][0], bbox[3][1]))
-
-# easier with derived bounds
-bbox = bounds(geometry)
-
-print(bbox)
-
-resolution = 10
-dst_nodata = 0
+import rasterio as rio
+from utils import read_s2_band_windowed
 
 
-def majority_filter(array, disk_size=10):
+def scale_values(in_single_np_array, factor=10000):
+    """ Scales digital number values with the given factor """
+       
+    # Allow division by zero
+    np.seterr(divide='ignore', invalid='ignore')
 
-    print(array.shape)
-    #print(disk(disk_size).shape)
-    #return rank.majority(array, footprint=disk(disk_size))
-    return dilation(array, footprint=square(disk_size))
+    result = in_single_np_array / factor
 
-# read file with geom extent
-with rio.open(file) as src:
+    return result
 
-    # window = rio.windows.Window.from_slices(
-    #     (
-    #         bbox[0],
-    #         bbox[1]
-    #         #bbox[1][0], #pixel_upper_left[0],
-    #         #bbox[3][1] #pixel_lower_right[0]
-    #     ),
-    #     (
-    #         bbox[2],
-    #         bbox[3]
-    #         #bbox[1][0], # pixel_upper_left[1],
-    #         #bbox[3][1] # pixel_lower_right[1]
-    #     )
-    # )
-    # subset = src.read(window=window)
-    # print(subset)
 
-    # # for resampling
-    # out_window = rio.mask.geometry_window(src, file_content.get("features"))
-    # print(out_window)
+def calc_ndvi(red_array, nir_array):
+    """ Calculates NDVI index from the numpy arrays and returns the result as one dimensional numpy array.
+    
+    CAUTION: the following requirements have to be met:
+    - input arrays have to contain Sentinel 2 L2A band digital numbers
+    - all bands have to be in the same shape (i.e. resampled to 10m)
 
-    # # resample data to target pixelsize in numpy array
-    # # and use windowed read for performance
-    # data = src.read(
-    #     out_shape=(
-    #         src.count,
-    #         int(out_window.height),
-    #         int(out_window.width)
-    #     ),
-    #     resampling=Resampling.nearest,
-    #     window=out_window,
-    # )
+    """ 
+    
+    # scale digital numbers first e.g. 9999 to 0.9999 for reflectance values
+    red_band = scale_values(red_array, factor=10000)
+    nir_band = scale_values(nir_array, factor=10000)
 
-    #print(src.meta)
+    # Allow division by zero
+    np.seterr(divide='ignore', invalid='ignore')
 
-    # # get affine transformation by window (& new origin)
-    # out_transform = src.window_transform(out_window)
+    ndvi = (nir_band - red_band)/(nir_band + red_band)
 
-    # # important: set width & height again to windowed / numpy array
-    # width = data.shape[2]
-    # height = data.shape[1]
+    return ndvi
 
-    #aligned_transform = out_transform
 
-    # # scale image transform & ensure the pixel alignment to the original pixels
-    # aligned_transform, width, height = aligned_target(
-    #     transform=out_transform,
-    #     height=height,
-    #     width=width,
-    #     resolution=resolution
-    # )
+def calc_ndbi(swir_array, nir_array):
+    """ Calculates NDBI index from the given numpy arrays and returns the result as one dimensional numpy array. 
 
-    # reorg geometry for rasterio masking
-    geom = [feature["geometry"] for feature in file_content["features"]]
+    CAUTION: the following requirements have to be met:
+    - input arrays have to contain Sentinel 2 L2A band digital numbers
+    - all bands have to be in the same shape (i.e. resampled to 10m)
+    
+    """ 
 
-    out_image, out_transform = rio.mask.mask(
-        dataset=src,  # resampled 10m windowed raster
-        shapes=geom,
-        crop=True,
-        filled=True,
-        nodata=src.nodata,
-        # important for VRT / multiband files if the number of band numbers are filtered and do not match the original datasource
-        #indexes=1
-    )
-    #print(out_image)
+    # scale digital numbers first e.g. 9999 to 0.9999 for reflectance values
+    swir_band = scale_values(swir_array, factor=10000)
+    nir_band = scale_values(nir_array, factor=10000)
 
-    # not meta - use profile for more information
-    profile = src.profile
+    # Allow division by zero
+    np.seterr(divide='ignore', invalid='ignore')
 
-    width = out_image.shape[2]
-    height = out_image.shape[1]
+    ndbi = (swir_band - nir_band)/(swir_band + nir_band)
+
+    return ndbi
+
+
+def calc_ndmi(swir_array, nir_array):
+    """ Calculates NDMI index from the given numpy arrays and returns the result as one dimensional numpy array. 
+
+    CAUTION: the following requirements have to be met:
+    - input arrays have to contain Sentinel 2 L2A band digital numbers
+    - all bands have to be in the same shape (i.e. resampled to 10m)
+    
+    """ 
+
+    # scale digital numbers first e.g. 9999 to 0.9999 for reflectance values
+    swir_band = scale_values(swir_array, factor=10000)
+    nir_band = scale_values(nir_array, factor=10000)
+
+    # Allow division by zero
+    np.seterr(divide='ignore', invalid='ignore')
+
+    ndmi = (nir_band - swir_band)/(nir_band + swir_band)
+
+    return ndmi
+
+
+def calc_ndwi(green_array, nir_array):
+    """ Calculates NDWI (as understood to detect water bodies) index from the given numpy arrays and returns the result as one dimensional numpy array. 
+
+    CAUTION: the following requirements have to be met:
+    - input arrays have to contain Sentinel 2 L2A band digital numbers
+    - all bands have to be in the same shape (i.e. resampled to 10m)
+    
+    """ 
+
+    # scale digital numbers first e.g. 9999 to 0.9999 for reflectance values
+    green_band = scale_values(green_array, factor=10000)
+    nir_band = scale_values(nir_array, factor=10000)
+
+    # Allow division by zero
+    np.seterr(divide='ignore', invalid='ignore')
+
+    ndwi = (green_band - nir_band)/(green_band + nir_band)
+
+    return ndwi
+
+
+def calc_ndre1(rededge_array_1, rededge_array_2):
+    """ Calculates NDRE1 index from the given numpy arrays and returns the result as one dimensional numpy array. 
+
+    (B06 - B05) / (B06 + B05)
+
+    CAUTION: the following requirements have to be met:
+    - input arrays have to contain Sentinel 2 L2A band digital numbers
+    - all bands have to be in the same shape (i.e. resampled to 10m)
+    
+    """ 
+
+    # scale digital numbers first e.g. 9999 to 0.9999 for reflectance values
+    rededge_array_1 = scale_values(rededge_array_1, factor=10000)
+    rededge_array_2 = scale_values(rededge_array_2, factor=10000)
+
+    # Allow division by zero
+    np.seterr(divide='ignore', invalid='ignore')
+
+    ndre1 = (rededge_array_2 - rededge_array_1)/(rededge_array_2 + rededge_array_1)
+
+    return ndre1
+
+
+if __name__ == '__main__':
+
+    # duration without writing test data to disk: 0,8s
+
+    # read test data
+    geojson_file_path = "../data/osm_nominatim_Freising.geojson"
+    b03, profile = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B03.tif", geojson_file_path=geojson_file_path)
+    b04, profile = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B04.tif", geojson_file_path=geojson_file_path)
+    b08, profile = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B08.tif", geojson_file_path=geojson_file_path)
+    b11, profile = read_s2_band_windowed(s2_file_path="../../data/S2A_32UPU_20220617_0_L2A/B11.tif", geojson_file_path=geojson_file_path)
+
+    assert b04.shape == b08.shape == b11.shape, f"shapes of bands differ: {b04.shape}, {b08.shape}, {b11.shape}"
+    
+    ndvi = calc_ndvi(red_array=b04, nir_array=b08)
+
+    ndbi = calc_ndbi(swir_array=b11, nir_array=b08)
+
+    ndwi = calc_ndwi(green_array=b03, nir_array=b08)
+
+    assert ndvi.shape == ndbi.shape == ndwi.shape, f"shapes of ndvi, ndbi, ndwi differ: {ndvi.shape}, {ndbi.shape}, {ndwi.shape}"
 
     profile.update({
-        'count': 1,
-        'driver': 'Gtiff',
-        'height': height,
-        'width': width,
-        'transform': out_transform
+        "dtype": np.float32
     })
 
-    print(profile)
+    # for testing only - write band to file system
+    with rio.open(f"../../data/S2A_32UPU_20220617_0_L2A/ndvi.tif", "w", **profile) as dest:
+        dest.write(ndvi)
 
-    # apply filter
-    # class 50 -> urban
+    with rio.open(f"../../data/S2A_32UPU_20220617_0_L2A/ndbi.tif", "w", **profile) as dest:
+        dest.write(ndbi)
 
-    # only checkout urban
-    out_image = np.where(out_image == 50, 50, 1)
-    print(out_image)
-
-    disk_size = 10
-    out_image = majority_filter(np.squeeze(out_image), disk_size)
-    print(out_image)
-
-    with rio.open(f"out_filter_{disk_size}.tif", 'w', **profile) as dest:
-        dest.write(out_image, 1)
-
-
-
-
+    with rio.open(f"../../data/S2A_32UPU_20220617_0_L2A/ndwi.tif", "w", **profile) as dest:
+        dest.write(ndwi)

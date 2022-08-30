@@ -34,7 +34,7 @@ The following methods shall be evaluated regarding their application in the proj
 - development of a processing chain and a web app
 
 ### Time period
-Data shall be analyzed since 2017 until 2022. As the city of Freising is located on the northern hemisphere in the moderate climate zone the start of june should fine for detecting vegetation.
+Data shall be analyzed since 2017 until 2022. As the city of Freising is located on the northern hemisphere in the moderate climate zone the start of june should be fine for detecting vegetation.
 
 ### Products
 #### **Zonal statistics at GADM Level 3**
@@ -52,15 +52,15 @@ Furthermore various maps at pixel level analysis shall be compiled that show the
 ## Next Steps
 - [x] create project logo (first draft)
 - [x] create video (first draft)
-- [ ] checkout available resources on AWS
+- [x] checkout available resources on AWS
   - [x] SageMaker Labs account
   - [x] extra credits on AWS
-- [ ] evaluate data & methods
-- [ ] formulate technical road map
-- [ ] implementation phase
-- [ ] presentation (web page)
-  - [ ] create final project logo 
-  - [ ] create final video
+- [x] evaluate data & methods
+- [x] formulate technical road map
+- [x] implementation phase
+- [x] presentation (web page)
+- [x] create final project logo 
+- [ ] create final video
 <hr />
 
 # GREENSCREEN - Entwicklung städtischer Grünflächen
@@ -97,7 +97,7 @@ Die folgenden Methoden sind auf ihre Verwendung zu bewerten:
 - Veränderungsanalyse
 - Entwicklung einer Verarbeitungskette und einer Web-App
 ### Zeitraum
-Die Daten sollen von 2017 bis 2022 ausgewertet werden. Da die Stadt Freising auf der nördlichen Hemisphäre in der gemäßigten Klimazone liegt, sollte der Beginn des Monats Juni für die Erfassung der Vegetation geeignet sein.
+Die Daten sollen von 2017 bis 2022 ausgewertet werden. Da die Stadt Freising auf der nördlichen Hemisphäre in der gemäßigten Klimazone liegt, sollte der Beginn des Monats Juni für die Erfassung der Vegetation gut geeignet sein.
 
 ### Produkte.
 #### **Zonale Statistik auf GADM Level 3**
@@ -115,10 +115,10 @@ Darüber hinaus sollen verschiedene Karten auf Pixelebene erstellt werden, die d
 ## Schritte
 - [x] Projektlogo erstellen (erster Entwurf)
 - [x] Video erstellen (erster Entwurf)
-- [ ] Verfügbare Ressourcen auf AWS auschecken
-- [ ] Daten und Methoden auswerten
-- [ ] Technische Roadmap formulieren
-- [ ] Umsetzung
-- [ ] Präsentation (Webseite)
-  - [ ] Projektlogo final erstellen
+- [x] Verfügbare Ressourcen auf AWS prüfen
+- [x] Daten und Methoden auswerten
+- [x] Technische Roadmap formulieren
+- [x] Umsetzung
+- [x] Präsentation (Webseite)
+- [x] Projektlogo final erstellen
   - [ ] Video final erstellen

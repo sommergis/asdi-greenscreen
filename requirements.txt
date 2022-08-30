@@ -1,10 +1,12 @@
-httpx
-cloudpathlib
-xarray
-rioxarray
+rasterio
 fiona
 scipy
 scikit-learn
 scikit-image
+cv2
 joblib
-iso3166
+matplotlib
+sat-search
+Bottleneck
+streamlit
+altair
