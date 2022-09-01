@@ -9,13 +9,20 @@ The idea is to support the UN Sustainable Development Goal Nr. 11 [Sustainable C
 
 <img align="right" width=200 style="float: left;" src="doc/logo.png" />
 
+## Try it out!
+- check [http://greenscreen.sommergis.de/](http://greenscreen.sommergis.de/) for a working demo app
+- install all Python packages from the requirements.txt `pip3 install -f requirements.txt`
+- run the processing chain: change the city name to your city in `scripts/processing.py`
+- change the city name in `src/app.py` and adjust the statistics loading
+- run streamlit app with `streamlit run app.py`
+
 ## Project scope
 The goal is to collect and analyze data on urban green spaces and visualize it in an appealing way with interactive maps and graphics so that the resulting information is easy to understand.
 The methods and outcomes of this project shall be transferable to other cities. This is ensured by a high level of automation of the data processing and the usage of global avaliable datasets.
 <br clear="right" />
 
 ## Video
-[![VIDEO](https://i9.ytimg.com/vi/3fyjXcNsIdY/mq1.jpg?sqp=CKDRm5cG&rs=AOn4CLDnKWh696Jxj68AYXnPDtksplz9Mg)](https://youtu.be/3fyjXcNsIdY)
+[![VIDEO](https://i9.ytimg.com/vi/3fyjXcNsIdY/mq1.jpg?sqp=CKDRm5cG&rs=AOn4CLDnKWh696Jxj68AYXnPDtksplz9Mg)](https://www.youtube.com/watch?v=htxhFb2Ywvo)
 
 ## Data & Methods 
 The information shall be derived with the support of the following available datasets of ASDI:
