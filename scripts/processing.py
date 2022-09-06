@@ -283,7 +283,7 @@ if __name__ == "__main__":
         print(df)
 
         # save to json
-        stats_file_path = f"{data_dir}/classified/{city}_{year}_clipped_stats.json"
+        stats_file_path = f"{data_dir}/classified/{city}_clipped_stats.json"
         with open(stats_file_path, "w") as out:
             out.write(json.dumps(stats))
 
@@ -291,7 +291,7 @@ if __name__ == "__main__":
         df = df.melt(['city', 'year'], var_name="category", value_name='hectares')
 
         # save to csv
-        stats_file_path = f"{data_dir}/classified/{city}_{year}_clipped_stats.csv"
+        stats_file_path = f"{data_dir}/classified/{city}_clipped_stats.csv"
         df.to_csv(stats_file_path, index=False)
 
         df = calc_change_stats(
