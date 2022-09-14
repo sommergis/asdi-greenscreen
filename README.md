@@ -67,7 +67,7 @@ Furthermore various maps at pixel level analysis shall be compiled that show the
 - [x] implementation phase
 - [x] presentation (web page)
 - [x] create final project logo 
-- [ ] create final video
+- [x] create final video
 <hr />
 
 ## Results
@@ -97,7 +97,7 @@ Ziel ist es, Daten über städtische Grünflächen zu sammeln, zu analysieren un
 <br clear="right" />
 
 ## Video
-[![VIDEO](https://i9.ytimg.com/vi/3fyjXcNsIdY/mq1.jpg?sqp=CKDRm5cG&rs=AOn4CLDnKWh696Jxj68AYXnPDtksplz9Mg)](https://youtu.be/3fyjXcNsIdY)
+[![VIDEO](https://i.ytimg.com/vi/htxhFb2Ywvo/mq1.jpg)](https://www.youtube.com/watch?v=htxhFb2Ywvo)
 
 ## Daten und Methoden
 Die Informationen sollen mit Hilfe der folgenden verfügbaren Datensätze von ASDI abgeleitet werden:
@@ -139,4 +139,14 @@ Darüber hinaus sollen verschiedene Karten auf Pixelebene erstellt werden, die d
 - [x] Umsetzung
 - [x] Präsentation (Webseite)
 - [x] Projektlogo final erstellen
-  - [ ] Video final erstellen
+- [x] Video final erstellen
+
+## Ergebnisse
+### Machine learning Klassifikation
+Mit maschinellem Lernen soll auf der Basis von Median Kompositbildern von Sentinel-2 für das Jahr 2020 ein Modell trainiert werden, wobei die ESA Worldcover 2020-Karte als Grundlage für die Landnutzungsklassifizierung dienen sollte. Das trainierte Modell soll Vegetation, bebaute Flächen/offenen Boden oder andere Pixel für die Jahre 2017, 2018, 2019, 2021 und (wenn möglich) 2022 vorhersagen.
+Die Eingangsdaten für das Training des ML Modells waren Fernerkundungsindizes wie NDVI, NDWI, NDBI und einige GLCM-Texturmetriken wie Homogenität und Entropie. Es wurden mehrere Klassifizierungsalgorithmen des Scikit-Learn-Pakets getestet - RandomForestClassifier und MLPClassifier schnitten am besten ab, wobei MLPClassifier bei der Erkennung von Texturen wie größeren Gebäuden sogar etwas besser war als RandomForestClassifier.
+
+Das aktuelle Modell, das auf der ESA Worldcover 2020 für die Stadt Freising für 3 Klassen (1: Vegetation, 3: bebaute Fläche, 0: andere) trainiert wurde, hatte eine Gesamtgenauigkeit von **96,6%** `scripts/esa_landcover_model_MLPClassifier_2022-08-29 13:04:16.912490_score_96_3classes.txt`.
+
+#### Konfusionsmatrix (normalisiert)
+<img src="doc/Freising_cm_96.png" width="350px">
