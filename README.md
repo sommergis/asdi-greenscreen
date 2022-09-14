@@ -22,7 +22,7 @@ The methods and outcomes of this project shall be transferable to other cities. 
 <br clear="right" />
 
 ## Video
-[![VIDEO](https://i9.ytimg.com/vi/3fyjXcNsIdY/mq1.jpg?sqp=CKDRm5cG&rs=AOn4CLDnKWh696Jxj68AYXnPDtksplz9Mg)](https://www.youtube.com/watch?v=htxhFb2Ywvo)
+[![VIDEO](https://i.ytimg.com/vi/htxhFb2Ywvo/mq1.jpg)](https://www.youtube.com/watch?v=htxhFb2Ywvo)
 
 ## Data & Methods 
 The information shall be derived with the support of the following available datasets of ASDI:
