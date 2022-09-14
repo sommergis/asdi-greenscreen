@@ -81,6 +81,8 @@ if __name__ == "__main__":
     #
     # data
     #
+    # TODO: change hard coded values to CSV input!
+
     years = [2017, 2018, 2019, 2020, 2021, 2017, 2018, 2019, 2020, 2021]
     veg = [7844.94, 7916.04, 7839.0, 7753.46, 7873.21,6466.39, 6197.19, 6187.74, 5250.4, 6008.25]
     bua = [916.3, 848.2, 924.22, 1003.05, 888.07,5048.02, 5291.09, 5316.92, 6254.81, 5493.5]
@@ -281,7 +283,12 @@ if __name__ == "__main__":
             Now we can prepare the input features for the training of the machine learning model: compute remote sensing indices like NDVI, NDWI, NDBI and some GLCM texture metrics such as homogeneity and entropy.
             Several classification algorithms of the scikit learn package were tested - RandomForestClassifier and MLPClassifier performed best while MLPClassifier was even slightly better on recognizing textures like bigger buildings than RandomForestClassifier.
 
+            ##### Results
+            The current model trained on the ESA Landcover extent for the city of Freising for 3 classes (1: vegetation, 3: built up area, 0: other) had an overall accuracy of **96,6%** `scripts/esa_landcover_model_MLPClassifier_2022-08-29 13:04:16.912490_score_96_3classes.txt`.
+
+            ##### Confusion matrix (normalized)
         """)
+        st.image("../doc/Freising_cm_96.png")
         st.write(
             """
             #### Think global - act local

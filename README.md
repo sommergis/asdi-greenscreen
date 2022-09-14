@@ -75,10 +75,10 @@ Furthermore various maps at pixel level analysis shall be compiled that show the
 The idea was to train a machine learning model on the median composite of Sentinel-2 for the year 2020 with the ESA Worldcover 2020 map as ground truth for the landuse classification.Then the trained model shall predict vegetation, built up area/bare soil or other pixels for the years 2017,2018,2019,2021 and (if possible) 2022.
 Input features for the training of the machine learning model were remote sensing indices like NDVI, NDWI, NDBI and some GLCM texture metrics such as homogeneity and entropy. Several classification algorithms of the scikit learn package were tested - RandomForestClassifier and MLPClassifier performed best while MLPClassifier was even slightly better on recognizing textures like bigger buildings than RandomForestClassifier.
 
-The current model trained on the ESA Landcover extent for the city of Freising for 3 classes (0: vegetation, 1: built up area, 2: other) had an overall accuracy of **96,6%** `scripts/esa_landcover_model_MLPClassifier_2022-08-29 13:04:16.912490_score_96_3classes.txt`.
+The current model trained on the ESA Landcover extent for the city of Freising for 3 classes (1: vegetation, 3: built up area, 0: other) had an overall accuracy of **96,6%** `scripts/esa_landcover_model_MLPClassifier_2022-08-29 13:04:16.912490_score_96_3classes.txt`.
 
 #### Confusion matrix (normalized)
-<img src="https://user-images.githubusercontent.com/22645408/190160295-dde9392c-7605-4b89-ad07-a24a62148cd0.png" width="350px">
+<img src="doc/Freising_cm_96.png" width="350px">
 
 
 # GREENSCREEN - Entwicklung städtischer Grünflächen
